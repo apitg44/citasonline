@@ -1,0 +1,1258 @@
+
+var mobile = $("#p_mobile").val();
+var tipo_solic = $("#p_tipo_pasaporte").val();
+var nameMobile = 'data['+mobile+']';
+var nameTipoSolic =  'data['+tipo_solic+']';
+
+var nameMobile;
+var nameMobile = 'data['+mobile+']';
+
+if (!mobile) {
+  nameMobile = 'data["phone"]';
+}
+
+
+function DisableSpecificDates(date) {
+
+    var count = 0;
+    var disableddates = [];
+    $('input[name=date_festivos]').each(function() {
+        disableddates[count] = $(this).val();
+        count++;
+    });
+
+    var m = date.getMonth();
+    var d = date.getDate();
+    var y = date.getFullYear();
+    var currentdate = d + '-' + (m + 1) + '-' + y;
+    for (var i = 0; i < disableddates.length; i++) {
+        if ($.inArray(currentdate, disableddates) !== -1) {
+            return [false];
+        }
+    }
+
+    if (disableddates.length == 0) {
+        return [true];
+    }
+
+    return disableddates;
+}
+
+function addSeparator(nStr) {
+    nStr += '';
+    var x = nStr.split(',');
+    var x1 = x[0];
+    var x2 = x.length > 1 ? ',' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + '.' + '$2');
+    }
+    return x1 + x2;
+}
+
+function removeUser(id) {
+    $("." + id + "").remove();
+    pagos.splice(pagos.findIndex(e => e.id === id), 1); 
+}
+
+function convertTimestamp(timestamp) { 
+    let d = new Date(timestamp * 1000), 
+        yyyy = d.getFullYear(),
+        mm = ('0' + (d.getMonth() + 1)).slice(-2),  
+        dd = ('0' + d.getDate()).slice(-2),         
+        hh = d.getHours(),
+        h = hh,
+        min = ('0' + d.getMinutes()).slice(-2),     
+        ampm = 'AM',
+        time;
+    if (hh > 12) {
+        h = hh - 12;
+        ampm = 'PM';
+    } else if (hh === 12) {
+        h = 12;
+        ampm = 'PM';
+    } else if (hh == 0) {
+        h = 12;
+    }    
+    time = yyyy + '-' + mm + '-' + dd + ', ' + h + ':' + min + ' ' + ampm;
+    return time;
+}
+
+function loadCalendarioProgramarCita(){
+        $("#datepicker").datepicker({
+
+            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+            ],
+            monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+                'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+            ],
+            dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi&eacute;rcoles', 'Jueves', 'Viernes', 'S&aacute;bado'],
+            dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mi&eacute;', 'Juv', 'Vie', 'S&aacute;b'],
+            dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'S&aacute;'],
+            weekHeader: 'Sm',
+            minDate: 1,
+            maxDate: "+" + RANGO_DIAS + "D",
+            beforeShowDay: DisableSpecificDates,
+            defaultDate: +COUNTDAY
+        });
+}
+
+function activarFecha() {
+        var token = $("#tokenList").val();
+
+        var fecha = $('#fecha_cita').val();
+        $("#jornada1").html("Cargando...");
+        $("#jornada2").html("Cargando...");
+
+        var url = $('#list').data('url');
+        $.ajax({
+
+            url: url,
+            type: "POST",
+            dataType: 'JSON',
+            data: {
+                fecha: fecha,
+                sxToken: token,
+            },
+
+            success: function (data) {
+                var medioDia = data[0][2];
+
+                var html_1 = "";
+                var html_2 = "";
+
+                for (var i = 1; i < data.length; i++) {
+
+                    if (data[i][1] < medioDia) {
+
+                        html_1 += '<div class="radio">\n\
+                                        <label><input type="radio" id="fecha_Hora" name="data[fecha_Hora]"  value="' + data[i][1] + '" data-fh="' + data[i][3] + '" required="required">' + data[i][2] + "-(" + data[i][4] + ')</label>\n\
+                                    </div>';
+                    }
+
+                    if (data[i][1] >= medioDia) {
+
+                        html_2 += '<div class="radio">\n\
+                                        <label><input type="radio" id="fecha_Hora" name="data[fecha_Hora]"  value="' + data[i][1] + '" data-fh="' + data[i][3] + '" required="required">' + data[i][2] + "-(" + data[i][4] + ')</label>\n\
+                                    </div>';
+                    }
+
+                }
+
+
+                if (html_1.length > 0) {
+                    $("#jornada1").html(html_1);
+                } else {
+                    $("#jornada1").html("No se encontraron horarios disponibles para la fecha: " + fecha);
+                }
+
+                if (html_2.length > 0) {
+                    $("#jornada2").html(html_2);
+                } else {
+                    $("#jornada2").html("No se encontraron horarios disponibles para la fecha: " + fecha);
+                }
+
+            },
+
+            error: function (jqHRX, textStatus, errorThrown) {
+
+                nxModal({'messageText': "Error: " + errorThrown});
+            }
+
+        });
+}
+
+$(document).ready(function() {
+
+    //Campos dinamicos
+    var div_mobile= $('#div_'+ mobile);
+    var div_tipo_solic  = $('#div_'+ tipo_solic);
+    var fields = [div_mobile, div_tipo_solic];
+        fields.sort(function() { return 0.5 - Math.random() });
+    // Mueve los campos del formulario en el orden aleatorio
+    for (var i = 0; i < fields.length; i++) {
+         $(fields[i]).appendTo("#campos");
+    }
+
+    //FIN campos
+
+
+
+    if(habilitarRecapchatV3==1){
+
+
+        enableButton(true)
+        function resetRecapchatV3(){
+            $('.submit').attr('disabled', true);
+             grecaptcha.ready(function() {
+                 var recapchatPublicV3 = $("#recapchatPublicV3").val();
+                 grecaptcha.execute(recapchatPublicV3, {action: 'submit'})
+                 .then(function(token) {
+                 $('#recaptchaResponse').val(token);
+
+                 $('#recapchatV3').val(token);
+
+                 
+                 $('.submit').attr('disabled', false);
+                 });
+             });
+         }
+         resetRecapchatV3();
+    }
+    
+    
+    if ($('.money').length > 0) {
+        $('.money').autoNumeric('init', {
+            aSep: '.',
+            aDec: ',',
+            vMin: '0',
+            vMax: '9999999999',
+        });
+
+    }
+    if ($('#form-formPago').length > 0) {
+        $('#form-formPago').validate();
+    }
+   
+    if ($('#formulario').length > 0) {
+        $.validator.addMethod("formEmail", function(value, element) {
+            var pattern = /^([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?(\.[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?)*|\[((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|IPv6:((((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){6}|::((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){5}|[0-9A-Fa-f]{0,4}::((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){4}|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):)?(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){3}|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){0,2}(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){2}|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){0,3}(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){0,4}(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::)((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3})|(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3})|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){0,5}(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3})|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){0,6}(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::)|(?!IPv6:)[0-9A-Za-z-]*[0-9A-Za-z]:[!-Z^-~]+)])+/;
+            return this.optional(element) || pattern.test(value);
+        }, "Por favor, ingrese un correo electrónico válido");
+
+        $.validator.addMethod("validEmail", function(value, element, options) {
+            return /.+@.+\.(.+)/.test(value);
+        }, "Correo no valido");
+        $.validator.addMethod("telefono", function(value, element) {
+            return value.length === 10;
+        }, "El tel\u00E9fono no es v\u00e1lido ");
+		
+		$.validator.addMethod("formNombre", function(value, element) {
+            var pattern = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]{2,50}$/;
+            return this.optional(element) || pattern.test(value);
+		}, "Por favor, ingrese un dato válido");
+
+        $('#formulario').validate({
+            rules: {
+                'data[email]': { required: true, formEmail: true, validEmail: true, email: false },
+				"data[nombre]": { required: true, formNombre: true, nombre: false },
+				"data[apellido]": { required: true, formNombre: true, apellido: false },
+                nameMobile: {required: true, telefono: true }
+            }
+        });
+        if (typeof RANGO_DIAS !== 'undefined') {
+            loadCalendarioProgramarCita();
+            activarFecha();
+        }
+        $.validator.addMethod("realEmail", function(value, element, options) {
+            return (
+                value.indexOf("yopmail") === -1 && value.indexOf("mohmal") == -1 &&
+                value.indexOf("emailo") === -1 && value.indexOf("mailna") == -1
+            );
+        }, "Correo no valido");
+
+        $("#correo").rules("add", { realEmail: {} });
+    }    
+    if ($('#form_repro').length > 0) {
+        $('#form_repro').validate();
+        if (typeof RANGO_DIAS !== 'undefined') {
+            loadCalendarioProgramarCita();
+            activarFecha();
+        }
+        $('#form_repro').on("submit", function(e) {
+
+            if ($("#fecha_Hora").length == 0) {
+                e.preventDefault();
+                $("#form_repro").prepend('<div class="msgError alert alert-danger alert-dismissable" id="msgError16024"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>' + PASAPORTE_MSG_HORA_CITA + '</div>');
+                return false;
+            } else {
+                return true;
+            }
+        });
+    }  
+    if ($("#formInfoCancel").length > 0) {
+        $("#formInfoCancel").validate();
+    }    
+    $('#correo_ok').bind("cut copy paste", function(e) {
+        e.preventDefault();
+    });
+   
+    $("#datepicker").change(function() {
+
+        var fecha = $(this).val();
+        var token = $("#tokenList").val();
+
+        $('#fecha_cita').val(fecha);
+
+        $("#jornada1").html("Cargando...");
+        $("#jornada2").html("Cargando...");
+
+        var url = $('#list').data('url');
+        $.ajax({
+
+            url: url,
+            type: "POST",
+            dataType: 'JSON',
+            data: {
+                fecha: fecha,
+                sxToken: token,
+            },
+
+            success: function(data) {
+                var medioDia = data[0][2];
+
+                var html_1 = "";
+                var html_2 = "";
+
+                for (var i = 1; i < data.length; i++) {
+
+                    if (data[i][1] < medioDia) {
+
+                        html_1 += '<div class="radio">\n\
+                                    <label><input type="radio" id="fecha_Hora" name="data[fecha_Hora]"  value="' + data[i][1] + '" data-fh="' + data[i][3] + '" required="required">' + data[i][2] + "-(" + data[i][4] + ')</label>\n\
+                                </div>';
+                    }
+
+                    if (data[i][1] >= medioDia) {
+
+                        html_2 += '<div class="radio">\n\
+                                    <label><input type="radio" id="fecha_Hora" name="data[fecha_Hora]"  value="' + data[i][1] + '" data-fh="' + data[i][3] + '" required="required">' + data[i][2] + "-(" + data[i][4] + ')</label>\n\
+                                </div>';
+                    }
+
+                }
+
+                if (html_1.length > 0) {
+                    $("#jornada1").html(html_1);
+                } else {
+                    $("#jornada1").html("No se encontraron horarios disponibles para la fecha: " + fecha);
+                }
+
+                if (html_2.length > 0) {
+                    $("#jornada2").html(html_2);
+                } else {
+                    $("#jornada2").html("No se encontraron horarios disponibles para la fecha: " + fecha);
+                }
+
+            },
+
+            error: function(jqHRX, textStatus, errorThrown) {
+
+                nxModal({ 'messageText': "Error: " + errorThrown});
+            }
+
+        });
+    });
+
+    var current_fs, next_fs, previous_fs;
+
+    $("#consult").click(function() {     
+
+        var parent = $(this).parent();
+        var next = $(this).parent().next();
+
+        $.validator.addMethod("validEmail", function(value, element, options) {
+            return /.+@.+\.(.+)/.test(value);
+        }, "Correo no valido");
+
+        $("#correo").rules("add", { validEmail: {} });
+        $.validator.addMethod("equalsTo", function(value, element, options) {
+            return value === $(options.compareWith).val();
+        }, "Los correos electrónicos no coinciden");
+
+        $("#correo_ok").rules("add", { equalsTo: { compareWith: "#correo" } });
+
+        $.validator.addMethod("telefono", function(value, element) {
+            return value.length === 7 || value.length === 10;
+        }, "El tel\u00E9fono no es v\u00e1lido ");
+
+        $("#num_tel").rules("add", { telefono: true });
+
+        var validator = $("#formulario").validate();
+
+        if (validator.element("#num_ide") && validator.element("#fecha_pago") && validator.element("#tipo_solic") && validator.element("#num_tel") && validator.element("#correo") && validator.element("#correo_ok") && validator.element("#acepto")) {
+
+            var num_ide = $("#num_ide").val();
+            var fecha_pago = $("#fecha_pago").val();
+            var nxToken = $('input[name=sxToken_consultWS]').val();
+
+            var url = $('#web_service').data('url');
+            $("#consult").attr('disabled', true);
+
+
+            if(habilitarRecapchatV3==1){
+                resetRecapchatV3();
+                var tokenRecapchat = $("#recaptchaResponse").val();
+            }else{
+                tokenRecapchat = $("#g-recaptcha-response").val();
+            }
+
+            $.ajax({
+
+                url: url,
+                type: "POST",
+                dataType: 'JSON',
+                data: {
+                    num_ide: num_ide,
+                    fecha_pago: fecha_pago,
+                    sxToken: nxToken,
+                    "g-recaptcha-response": tokenRecapchat
+                },
+                success: function(data) {
+                    if (data.error_codigo == 0) {
+                        if (data.nombre) {
+                            $('#nombre').val(data.nombre);
+                            $('#apellido').val(data.apellido);
+                        } else {
+                            $('.dspshw').removeClass('hide');
+                        }
+                        $('#identificacion').val(addSeparator(data.identificacion));
+                        $('#referencia').val(addSeparator(data.referencia1));
+
+                        $('#des_pago').val(data.estado_descripcion);
+                        $('#banco').val(data.banco_descripcion);
+                        $('#sucursal').val(data.sucursal_descripcion);
+
+                        $('#tipo_pasa').val(data.documento_descripcion);
+                        $('#fecha_pago_info').val(data.tiempo);
+                        $('#id_pago_info').val(data.id);
+
+                        current_fs = parent;
+                        next_fs = next;
+
+                        $("#progreso li").eq($("fieldset").index(current_fs)).removeClass("active");
+                        $("#progreso li").eq($("fieldset").index(current_fs)).addClass("previous");                        
+                        $("#progreso li").eq($("fieldset").index(next_fs)).addClass("active");                        
+                        next_fs.show();                        
+                        current_fs.hide();
+
+                        $('html,body').animate({
+                            scrollTop: $("#progreso").offset().top
+                        }, 1);
+
+                    } else if (data.error_codigo === 2) {
+
+
+                        if(habilitarRecapchatV3!=1){
+                           grecaptcha.reset()
+                        }
+                        nxModal({ 'messageText': "Lo sentimos: " + data.msg });
+
+                    } else if (data.error_codigo === 3) {
+                        if(habilitarRecapchatV3!=1){
+                            grecaptcha.reset()
+                         }
+                        nxModal({ 'messageText': "" + data.msg });
+
+                    } else {
+                        if(habilitarRecapchatV3!=1){
+                            grecaptcha.reset()
+                         }
+                        if ($("#formulario").length > 0) {
+
+                            if (IS_APP == "1") {
+                                nxModal({ 'messageText': 'Lo sentimos: su pago no ha podido ser validado, verifique que la información ingresada coincida con la del recibo de pago.' });
+                            } else {
+                                nxModal({ 'messageText': 'Lo sentimos: su pago no ha podido ser validado, esto se puede presentar por 2 razones: \n \n 1. Información incorrecta: Verifique que la información ingresada coincida con la del recibo de pago. \n \n 2. Inconvenientes con el navegador del equipo: Presione al tiempo las siguientes teclas CTRL+SHIFT+R.' });
+                            }
+                        } else {
+                            nxModal({ 'messageText': 'Lo sentimos: su pago no ha podido ser validado, esto se puede presentar por 2 razones: \n \n 1. Información incorrecta: Verifique que la información ingresada coincida con la del recibo de pago. \n \n 2. Inconvenientes con el navegador del equipo: Presione al tiempo las siguientes teclas CTRL+SHIFT+R.' });
+                        }
+                    }
+                    $("#consult").attr('disabled', false);
+                },
+                error: function(jqHRX, textStatus, errorThrown) {
+                    $("#consult").attr('disabled', false);
+                    if(habilitarRecapchatV3!=1){
+                        grecaptcha.reset()
+                     }
+                    nxModal({ 'messageText': "Error: " + errorThrown});
+                }
+
+            });
+        }
+        activarFecha();
+
+    });
+
+    $("#consultGroupNext").click(function() {
+        var parent = $(this).parent();
+        var next = $(this).parent().next();
+
+        $.validator.addMethod("equalsTo", function (value, element, options) {
+            return value === $(options.compareWith).val();
+        }, "Los correos electrónicos no coinciden");
+
+        $("#correo_ok").rules("add", {equalsTo: {compareWith: "#correo"}});
+
+        $.validator.addMethod("telefono", function (value, element) {
+            return value.length == 7 || value.length == 10;
+        }, "El tel\u00E9fono no es v\u00e1lido ");
+
+        $("#num_tel").rules("add", {telefono: true});
+
+
+        var num_ide = $("#num_identificacion").val();
+        var fecha_pago = $("#fechaPago").val();
+        let cws = $("#cws").val();
+        var nxToken = $('input[name=sxToken_consultWS]').val();
+        let cusers = document.getElementsByClassName("usuario").length;
+
+        var url = $('#web_service').data('url');
+        if(cusers > 1) {
+            nxModal({
+                type: "confirm",
+                messageText: "Sr(a) por favor confirme si los datos son validos, si desea continuar por favor dar clic en Si"
+            }).then(function (response) {
+                if (response && cusers > 1) {
+
+
+
+                    if(habilitarRecapchatV3==1){
+                        resetRecapchatV3();
+                        var tokenRecapchat = $("#recaptchaResponse").val();
+                    }else{
+                        tokenRecapchat = $("#g-recaptcha-response").val();
+                    }
+        
+                    $.ajax({
+
+                        url: url,
+                        type: "POST",
+                        dataType: 'JSON',
+                        data: {
+                            num_ide: num_ide,
+                            fecha_pago: fecha_pago,
+                            sxToken: nxToken,
+                            cws: cws,
+                            "g-recaptcha-response": tokenRecapchat
+                        },
+
+                        success: function (data) {
+
+                            if (data.error_codigo == 0) {
+                                if (data.nombre) {
+                                    $('#nombre').val(data.nombre);
+                                    $('#apellido').val(data.apellido);
+                                } else {
+                                    $('.dspshw').removeClass('hide');
+                                }
+                                $('#identificacion').val(addSeparator(data.identificacion));
+                                $('#referencia').val(addSeparator(data.referencia1));
+
+                                $('#des_pago').val(data.estado_descripcion);
+                                $('#banco').val(data.banco_descripcion);
+                                $('#sucursal').val(data.sucursal_descripcion);
+
+                                $('#tipo_pasa').val(data.documento_descripcion);
+                                $('#fecha_pago_info').val(data.tiempo);
+                                $('#id_pago_info').val(data.id);
+                                var usuario = document.getElementsByClassName("usuario");
+                                var numUsuario = usuario.length;
+
+                                var numeroUsuarios = 0;
+                                for (var i = 0; i < numUsuario; i++) {
+                                    if (usuario[i].className == "usuario")
+                                        numeroUsuarios++;
+                                }
+
+                                $('.usuarios').append(
+                                    "<input type=\"hidden\" name=\"num_usuarios\" id=\"num_usuarios\"   value=\"" + numeroUsuarios + "\" >"
+                                );
+
+                                current_fs = parent;
+                                next_fs = next;
+
+                                $("#progreso li").eq($("fieldset").index(current_fs)).removeClass("active");
+                                $("#progreso li").eq($("fieldset").index(current_fs)).addClass("previous");
+                                $("#progreso li").eq($("fieldset").index(next_fs)).addClass("active");
+                                next_fs.show();
+                                current_fs.hide();
+
+                                $('html,body').animate({
+                                    scrollTop: $("#progreso").offset().top
+                                }, 1);
+
+                                var divs = document.getElementsByClassName("orange");
+                                var numDivs = divs.length;
+                                var contadorNaranja = 0;
+                                for (var i = 0; i < numDivs; i++) {
+                                    if (divs[i].className == "orange")
+                                        contadorNaranja++;
+                                }
+
+                            } else if (data.error_codigo === 2) {
+                                if(habilitarRecapchatV3!=1){
+                                    grecaptcha.reset();
+                                }
+                                nxModal({'messageText': 'Lo sentimos:' + data.msg});
+                            } else {
+                                if(habilitarRecapchatV3!=1){
+                                    grecaptcha.reset();
+                                }
+                                if ($("#formulario").length > 0) {
+
+                                    if (IS_APP == "1") {
+                                        nxModal({'messageText': 'Lo sentimos: su pago no ha podido ser validado, verifique que la información ingresada coincida con la del recibo de pago.'});
+
+                                    } else {
+                                        nxModal({'messageText': 'Lo sentimos: su pago no ha podido ser validado, esto se puede presentar por 2 razones: \n \n 1. Información incorrecta: Verifique que la información ingresada coincida con la del recibo de pago. \n \n 2. Inconvenientes con el navegador del equipo: Presione al tiempo las siguientes teclas CTRL+SHIFT+R.'});
+
+                                    }
+                                } else {
+                                    nxModal({'messageText': 'Lo sentimos: su pago no ha podido ser validado, esto se puede presentar por 2 razones: \n \n 1. Información incorrecta: Verifique que la información ingresada coincida con la del recibo de pago. \n \n 2. Inconvenientes con el navegador del equipo: Presione al tiempo las siguientes teclas CTRL+SHIFT+R.'});
+
+                                }
+                            }
+
+                        },
+
+                        error: function (jqHRX, textStatus, errorThrown) {
+                            if(habilitarRecapchatV3!=1){
+                                grecaptcha.reset();
+                            }
+                            nxModal({ 'messageText': "Error: " + errorThrown});
+                        }
+
+                    });
+                }
+            });
+        }else{
+            nxModal({'messageText':'El agendamiento de cita grupal debe ser minino para dos (2) integrantes.'});
+            if(habilitarRecapchatV3!=1){
+                grecaptcha.reset();
+            }
+        }
+    });
+
+    $("#consultGroup").click(function() {
+
+        $.validator.addMethod("equalsTo", function(value, element, options) {
+            return value === $(options.compareWith).val();
+        }, "Los correos electrónicos no coinciden");
+
+        $("#correo_ok").rules("add", { equalsTo: { compareWith: "#correo" } });
+
+        $.validator.addMethod("telefono", function(value, element) {
+            return value.length == 7 || value.length == 10;
+        }, "El tel\u00E9fono no es v\u00e1lido ");
+
+        $("#num_tel").rules("add", { telefono: true });
+
+        var validator = $("#formulario").validate();
+        var integrantes = $(".groupUsers tr").toArray().length;
+
+        if (integrantes <= MAX_INT_GROUP){
+            if (validator.element("#num_ide") && validator.element("#fecha_pago") && validator.element("#tipo_solic") && validator.element("#num_tel") && validator.element("#correo") && validator.element("#correo_ok") && validator.element("#acepto")) {
+
+                var num_ide = $("#num_ide").val();
+                var fecha_pago = $("#fecha_pago").val();
+                let cws = $("#cws").val();
+                var nxToken = $('input[name=sxToken_consultWS]').val();
+                var url = $('#web_service').data('url');
+
+                $.ajax({
+
+                    url: url,
+                    type: "POST",
+                    dataType: 'JSON',
+                    data: {
+                        num_ide: num_ide,
+                        fecha_pago: fecha_pago,
+                        sxToken: nxToken,
+                        cws: cws,
+                        "g-recaptcha-response": false
+                    },
+                    success: function(data) {
+
+                       if (data.error_codigo == 0) {
+
+                            var id = $("#" + data.id + "").val();
+                            
+                            if (id == 1) {
+                                nxModal({ 'messageText': 'El usuario ya se encuentra agregado. ' });
+                            } else {
+                                var num_tel = $("#num_tel").val();
+                                var email = $("#correo").val();
+                                var tipoSolicitud = $("#tipo_solic").val();
+                                var solicitud = "";
+
+                                if (tipoSolicitud == 1) {
+                                    solicitud = 'Pasaporte (Ordinario, Ejecutivo, Emergencia)';
+                                }
+                                if (tipoSolicitud == 2) {
+                                    solicitud = 'Pasaporte Tripulante';
+                                }
+                                pagos.push(data); 
+                                var dataUser = [];
+                                dataUser[0] = data.id;
+                                dataUser[1] = {}; 
+                                dataUser[1]['nombre'] = data.nombre;
+                                dataUser[1]['identificacion'] = data.identificacion;
+
+                                $(".groupUsers tbody").append(
+                                    "<tr class='" + data.id + "'>" +
+                                    "<td>" + addSeparator(data.identificacion) + "</td>" +
+                                    "<td>" + fecha_pago + "</td>" +
+                                    "<td>" + solicitud + "</td>" +
+                                    "<td>" + num_tel + "</td>" +
+                                    "<td>" + email + "</td>" +
+                                    "<td><a onclick='removeUser(" + data.id + ")'> <i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>" +
+                                    "<input type=\"hidden\" class='usuario' name=\"" + data.id + "\" id=\"" + data.id + "\" value=\"1\"/>" +
+                                    "<input type=\"hidden\" name=\"id[]\" value=\"" + data.id + "\">" +
+                                    "<input type=\"hidden\" name=\"num_identificacion[]\" id=\"num_identificacion\" value=\"" + data.identificacion + "\">" +
+                                    "<input type=\"hidden\" name=\"correo[]\" id=\"correoElec\"  value=\"" + email + "\">" +
+                                    "<input type=\"hidden\" name=\"num_tel[]\" id=\"numTel\" value=\"" + num_tel + "\">" +
+                                    "<input type=\"hidden\" name=\"tipo_solicitud[]\"  id=\"tipoSolicitud\" value=\"" + tipoSolicitud + "\" >" +
+                                    "<input type=\"hidden\" name=\"fechaPago[]\" id=\"fechaPago\"   value=\"" + fecha_pago + "\" >" +
+                                    "<input type=\"hidden\" name=\"nombres[]\" id=\"nombres\"   value=\"" + data.nombre + "\" >" +
+                                    "<input type=\"hidden\" name=\"apellidos[]\" id=\"apellidos\"   value=\"" + data.apellido + "\" ></td>" +
+                                    "</tr>"
+                                );
+
+
+                                if (data.nombre) {
+                                    $('#nombre').val(data.nombre);
+                                    $('#apellido').val(data.apellido);
+                                } else {
+                                    $('.dspshw').removeClass('hide');
+                                }
+                                $('#identificacion').val(addSeparator(data.identificacion));
+                                $('#referencia').val(addSeparator(data.referencia1));
+
+                                $('#des_pago').val(data.estado_descripcion);
+                                $('#banco').val(data.banco_descripcion);
+                                $('#sucursal').val(data.sucursal_descripcion);
+
+                                $('#tipo_pasa').val(data.documento_descripcion);
+                                $('#fecha_pago_info').val(data.tiempo);
+                                $('#id_pago_info').val(data.id);
+                            }
+
+                        } else {
+                            if ($("#formulario").length > 0) {
+
+                                if (IS_APP == "1") {
+                                    nxModal({ 'messageText': 'Lo sentimos: su pago no ha podido ser validado, verifique que la información ingresada coincida con la del recibo de pago. ' });
+
+                                } else {
+                                    nxModal({ 'messageText': 'Lo sentimos: su pago no ha podido ser validado, esto se puede presentar por 2 razones: \n \n 1. Información incorrecta: Verifique que la información ingresada coincida con la del recibo de pago. \n \n 2. Inconvenientes con el navegador del equipo: Presione al tiempo las siguientes teclas CTRL+SHIFT+R.' });
+
+                                }
+                            } else {
+                                nxModal({ 'messageText': 'Lo sentimos: su pago no ha podido ser validado, esto se puede presentar por 2 razones: \n \n 1. Información incorrecta: Verifique que la información ingresada coincida con la del recibo de pago. \n \n 2. Inconvenientes con el navegador del equipo: Presione al tiempo las siguientes teclas CTRL+SHIFT+R.' });
+
+                            }
+                        }
+
+
+                    },
+
+                    error: function(jqHRX, textStatus, errorThrown) {
+
+                        nxModal({ 'messageText': "Error: " + errorThrown});
+                    }
+
+                });
+
+            }
+        }else{
+            nxModal({
+                messageText: "El n&uacute;mero de integrantes para la cita grupal no puede ser superior a " + MAX_INT_GROUP
+            });
+        }
+        activarFecha();
+
+
+    });  
+
+    $("#new_cita").click(function() {
+
+        var fecha = $('#fecha_cita').val();
+
+        var current_fs = $(this).parent();
+        var next_fs = $(this).parent().next();
+
+        var validator = $("#formulario").validate();
+        let valNombre = validator.element('#nombre');
+        let valApellido = validator.element('#apellido');
+        if (valApellido && valNombre) {
+            if (fecha !== 0 && $("#fecha_Hora").length > 0) {
+
+                if (validator.element('#fecha_Hora')) {
+
+                    var fecha_Hora = $('#fecha_Hora:checked').val();
+                    var fh_info = $('#fecha_Hora:checked').data('fh');
+                   
+
+                    var url = $('#list').data('url');
+                    var token = $("#tokenList").val();
+
+
+                    $.ajax({
+
+                        url: url,
+                        type: "POST",
+                        dataType: 'JSON',
+                        data: {
+                            fecha: fecha,
+                            sxToken: token
+                        },
+
+                        success: function(data) {
+
+                            var bandera = false;
+
+                            for (var i = 0; i < data.length; i++) {
+
+                                if (fecha_Hora == data[i][1]) {
+                                    bandera = true;
+                                    break;
+                                }
+                            }
+
+                            if (bandera) {
+                                if ($('#nombre').length > 0) {
+                                    $('#nombre_info').text($('#nombre').val() + " " + $('#apellido').val());
+                                } else {
+                                    $('#nombre_info').text($('#nombre').val());
+                                }
+
+                                $('#cedula_info').text(addSeparator($('#num_ide').val()));
+                                $('#correo_info').text($('#correo').val());
+                                $('#fecha_hp').text($('#fecha_pago_info').val());
+                                $('#referencia_info').text(addSeparator($('#referencia').val()));
+                                $('#sucursal_info').text($('#sucursal').val());
+
+                                $('#fecha_Hora_info').text(fh_info);
+
+                                $("#progreso li").eq($("fieldset").index(current_fs)).removeClass("active");
+                                $("#progreso li").eq($("fieldset").index(current_fs)).addClass("previous");                               
+                                $("#progreso li").eq($("fieldset").index(next_fs)).addClass("active");                             
+                                next_fs.show();                               
+                                current_fs.hide();
+
+                            } else {
+                                nxModal({ 'messageText': 'Mensaje: debe seleccionar otra hora de cita ya que no hay cupos disponibles en la hora seleccionada previamente' });
+
+                            }
+                        },
+
+                        error: function(jqHRX, textStatus, errorThrown) {
+
+                            nxModal({ 'messageText': "Error: " + errorThrown});
+                        }
+
+                    });
+
+
+                } else {
+                    nxModal({ 'messageText': 'Mensaje: debe seleccionar la hora de la cita para continuar' });
+
+                }
+
+
+            } else {
+                nxModal({ 'messageText': 'Mensaje: debe seleccionar la fecha y hora de la cita para continuar' });
+
+            }
+        } else {
+            nxModal({ 'messageText': 'Mensaje: debe ingresar los datos personales completos' });
+
+        }
+    });
+
+    $("#new_cita_grupal").click(function() {
+
+        var fecha = $('#fecha_cita').val();
+
+        var current_fs = $(this).parent();
+        var next_fs = $(this).parent().next();
+
+        var validator = $("#formulario").validate();
+        let valNombre = validator.element('#nombre');
+        let valApellido = validator.element('#apellido');
+        if (valApellido && valNombre) {
+            if (fecha !== 0 && $("#fecha_Hora").length > 0) {
+
+                if (validator.element('#fecha_Hora')) {
+                    var fecha_Hora = parseInt($('#fecha_Hora:checked').val());
+                    var fecha_Hora_inicial = fecha_Hora;
+                    var fechas_tabla_final = fecha_Hora;
+                    var numero_usuarios = parseInt($("#num_usuarios").val());
+                    var url = $('#list').data('url');
+                    var token = $("#tokenList").val();
+
+
+                    $.ajax({
+
+                        url: url,
+                        type: "POST",
+                        dataType: 'JSON',
+                        data: {
+                            fecha: fecha,
+                            sxToken: token
+                        },
+
+                        success: function(data) {
+                            for (var j = 0; j < numero_usuarios; j++) {
+                                var bandera = false;
+                               
+                                for (var i = 0; i < data.length; i++) {
+                                    if (fecha_Hora == data[i][1]) {
+                                        bandera = true;
+                                    }
+                                }
+                                
+                                if (bandera) {
+                                    fecha_Hora = fecha_Hora + parseInt(TIME_ATTENTION);
+                                }
+                                if (bandera === false) {
+                                    break;
+                                }
+                            }
+
+                            if (bandera) {
+                                $(".groupUsersFinal tbody tr").remove();
+                               for (var i = 0; i < pagos.length; i++){
+                                    $(".groupUsersFinal tbody").append("<tr><td>" + pagos[i].nombre + "</td><td>" + pagos[i].apellido + "</td><td>" + pagos[i].identificacion + "</td><td>" + pagos[i].correo_electronico + "</td><td>" + convertTimestamp(fechas_tabla_final) + "</td><td>" + pagos[i].tiempo + "</td><td>" + pagos[i].referencia1 + "</td><td>" + pagos[i].sucursal_descripcion + "</td></tr>"); 
+                                    fechas_tabla_final += parseInt(TIME_ATTENTION);
+                               } 
+                                
+
+                                $(".horasCitas").remove();
+                                for (var j = 0; j < numero_usuarios; j++) {
+
+                                    $(".fechas").append(
+                                        "<div class='horasCitas'>" +
+                                        "<input type=\"hidden\"  name=\"fechaCita[]\"  value=\"" + fecha_Hora_inicial + "\"/>" +
+                                        "</div>"
+                                    );
+                                    fecha_Hora_inicial = fecha_Hora_inicial + parseInt(TIME_ATTENTION);
+                                }
+                                $("#progreso li").eq($("fieldset").index(current_fs)).removeClass("active");
+                                $("#progreso li").eq($("fieldset").index(current_fs)).addClass("previous");
+                                
+                                $("#progreso li").eq($("fieldset").index(next_fs)).addClass("active");
+
+                                
+                                next_fs.show();
+
+                                
+                                current_fs.hide();
+
+                            } else {
+                                nxModal({ 'messageText': 'Mensaje: Debe seleccionar otra hora de cita ya que no hay cupos disponibles a partir de la hora seleccionada para todo los usuarios del grupo. Recuerde que son 10 minutos por usuario.' });
+
+                            }
+                        },
+
+                        error: function(jqHRX, textStatus, errorThrown) {
+
+                            nxModal({ 'messageText': "Error: " + errorThrown});
+                        }
+
+                    });
+
+
+                } else {
+                    nxModal({ 'messageText': 'Mensaje: Debe seleccionar la hora de la cita para continuar' });
+
+                }
+
+
+            } else {
+                nxModal({ 'messageText': 'Mensaje: Debe seleccionar la fecha y hora de la cita para continuar' });
+
+            }
+        } else {
+            nxModal({ 'messageText': 'Mensaje: Debe ingresar los datos personales completos' });
+
+        }
+    });  
+    $(".previous").click(function() {
+        current_fs = $(this).parent();
+        previous_fs = $(this).parent().prev();        
+        $("#progreso li").eq($("fieldset").index(current_fs)).removeClass("active");
+        $("#progreso li").eq($("fieldset").index(previous_fs)).addClass("active");
+        $("#progreso li").eq($("fieldset").index(previous_fs)).removeClass("previous");       
+        previous_fs.show();
+        current_fs.hide();
+
+    });
+    $("#cancelAppointment").click(function() {
+
+        var validator = $("#formInfoCancel").validate();
+
+        if (validator.element('#description')) {
+
+            $(this).prop('disabled', true);
+            var url = $('#urlCancel').data('url');
+            var urlConsult = $('#urlConsult').data('url');
+            var description = $('#description').val();
+            var appointment = $('#appointment').val();
+            var pasaporte = $('#pasaporte').val();
+            var usuario = $('#usuario_id').val();
+            $.ajax({
+
+                url: url,
+                type: "GET",
+                data: {
+                    descripcion_cancelacion: description,
+                    cita_id: appointment,
+                    pasaporte_id: pasaporte,
+                    usuario_id: usuario
+                },
+
+                success: function(data) {                    
+                    $("#modalCancelCita #close").click();
+                    window.location.href = urlConsult;
+                    $(this).prop('disabled', false);
+
+
+                },
+
+                error: function(jqHRX, textStatus, errorThrown) {
+                    $(this).prop('disabled', false);
+
+                    nxModal({ 'messageText': "Error: " + errorThrown});
+                }
+
+            });
+
+        }
+    });    
+    $("#consultWs").click(function() {
+
+        var validator = $("#form-user").validate();
+
+        if (validator.element("#identificacion") && validator.element("#fecha_pago")) {
+
+            var num_ide = $("#identificacion").val();
+            var fecha_pago = $("#fecha_pago").val();
+
+            var url = $('#web_service').data('url');
+            var nxToken = $('input[name=sxToken]').val();
+
+
+
+            if(habilitarRecapchatV3==1){
+                resetRecapchatV3();
+                var tokenRecapchat = $("#recaptchaResponse").val();
+            }else{
+                tokenRecapchat = $("#g-recaptcha-response").val();
+            }
+
+
+            $.ajax({
+
+                url: url,
+                type: "POST",
+                dataType: 'JSON',
+                data: {
+                    num_ide: num_ide,
+                    fecha_pago: fecha_pago,
+                    sxToken: nxToken,
+                    "g-recaptcha-response": tokenRecapchat
+                },
+                success: function(data) {
+
+                    if (data.error_codigo == 0) {
+
+                        $('#nombre').text(data.nombre + " " + data.apellido);
+                        $('#cedula_info').text(data.identificacion);
+                        $('#referencia_info').text(data.referencia1);
+
+                        $('#descripcion_info').text(data.estado_descripcion);
+                        $('#banco_info').text(data.banco_descripcion);
+                        $('#sucursal_info').text(data.sucursal_descripcion);
+
+                        $('#tipo_pasa').text(data.documento_descripcion);
+                        $('#fecha_pago_info').text(data.tiempo);
+
+                        $("#form-user #show").click();
+
+
+                    } else if (data.error_codigo === 2) {
+                        $(".modContent").prepend('<div class="msgError alert alert-danger alert-dismissable" id="msgError16024"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><p>Lo sentimos: ' + data.msg + '</p></div>');
+                    }
+                else if (data.error_codigo === 3) {
+
+                    $(".modContent").prepend('<div class="msgError alert alert-danger alert-dismissable" id="msgError16024"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><p>Lo sentimos: ' + data.msg + '</p></div>');
+                } else {
+
+                        if ($("#form-user").length > 0) {
+
+                            if (IS_APP == "1") {
+
+                                $(".modContent").prepend('<div class="msgError alert alert-danger alert-dismissable" id="msgError16024"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><p>Lo sentimos: su pago no ha podido ser validado, verifique que la información ingresada coincida con la del recibo de pago.</p></div>');
+
+                            } else {
+                                $(".modContent").prepend('<div class="msgError alert alert-danger alert-dismissable" id="msgError16024"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><p>Lo sentimos: su pago no ha podido ser validado, esto se puede presentar por 2 razones:</p>\n\
+                                    <p> 1. Información incorrecta: Verifique que la información ingresada coincida con la del  recibo de pago.</p> \n\
+                                    <p> 2. Inconvenientes con el navegador del equipo: Presione al tiempo las siguientes teclas CTRL+SHIFT+R. </p>\n\
+                                    </div>');
+                            }
+
+                        } else {                           
+                            $(".modContent").prepend('<div class="msgError alert alert-danger alert-dismissable" id="msgError16024"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><p>Lo sentimos: su pago no ha podido ser validado, esto se puede presentar por 2 razones:</p>\n\
+                                    <p> 1. Información incorrecta: Verifique que la información ingresada coincida con la del  recibo de pago.</p> \n\
+                                    <p> 2. Inconvenientes con el navegador del equipo: Presione al tiempo las siguientes teclas CTRL+SHIFT+R. </p>\n\
+                                </div>');
+                        }
+
+                    }
+
+                    $("#identificacion").val("");
+                    $("#fecha_pago").val("");
+                    if(habilitarRecapchatV3!=1){
+                        grecaptcha.reset();
+                        disableButton();
+
+                    }
+                },
+
+                error: function(jqHRX, textStatus, errorThrown) {
+                    $(".modContent").prepend('<div class="msgError alert alert-danger alert-dismissable" id="msgError16024"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><p>Lo sentimos: su pago no ha podido ser validado, esto se puede presentar por 2 razones:</p>\n\
+                                <p> 1. Información incorrecta: Verifique que la información ingresada coincida con la del  recibo de pago.</p> \n\
+                                <p> 2. Inconvenientes con el navegador del equipo: Presione al tiempo las siguientes teclas CTRL+SHIFT+R. </p>\n\
+                            </div>');
+                    console.log("Error: " + errorThrown);
+                }
+
+            });
+
+        }
+    });  
+    $('#reprogramming_cita').click(function() {
+
+        var url = $('#reprogramming_url').data('url');
+        var urlInfoCita = $('#infoCita').data('url');
+
+        var fecha_Hora = $('#fecha_Hora:checked').val();
+        var fecha_cita = $('#fecha_cita').val();
+        var cita_id = $('#cita_id').val();
+
+        $.ajax({
+
+            url: url,
+            type: "GET",
+            data: {
+                fecha_Hora: fecha_Hora,
+                fecha_cita: fecha_cita,
+                cita_id: cita_id
+            },
+
+            success: function(data) {
+
+                if (data) {
+
+                    $("#identificacion").val("");
+                    $("#fecha_pago").val("");
+
+                    $("#modalReprogramming #close").click();
+                    window.location.href = urlInfoCita;
+
+                } else {
+                    nxModal({ 'messageText': data });
+
+                }
+
+
+            },
+
+            error: function(jqHRX, textStatus, errorThrown) {
+
+                nxModal({ 'messageText': "Error: " + errorThrown});
+            }
+
+        });       
+    });    
+    if ($('#formulario').length > 0 && typeof GO_NEXT_PAGE !== 'undefined') {
+        if (GO_NEXT_PAGE == "1") {
+            $("#paso1").css("display", "none");
+            $('#acepto').attr('checked', true);
+            $('#consult').trigger('click');
+        }
+    }    
+    if ($('#form-user').length > 0) {        
+        if (GO_NEXT_PAGE == "1" && PROCESS != "3") {
+            $("body").css("display", "none");
+            $('#form-user').trigger('submit');
+        } else if (GO_NEXT_PAGE == "1" && PROCESS == "3") {
+            $("#consultWs").trigger("click");
+        }
+    }
+});
+
+function getButton() {
+    var selectCreate = "#paso1 #consult";
+    var selectCreateGrp = "#paso1 #consultGroupNext";
+    var selectConsult = "#form-user #send1";
+    var selectConsultPay = "#form-user #consultWs";
+    var selectButton = "";
+
+    if ($(selectCreate).length) {
+        selectButton = selectCreate;
+    } else if ($(selectCreateGrp).length) {
+        selectButton = selectCreateGrp;
+    } else if ($(selectConsult).length) {
+        selectButton = selectConsult;
+    } else if ($(selectConsultPay).length) {
+        selectButton = selectConsultPay;
+    }
+
+    return selectButton;
+}
+
+function enableButton(google) {
+
+        if (google) {
+            var selectButton = getButton();
+            if (selectButton !== "" && $(selectButton).length) {
+                $(selectButton).attr("disabled", false);
+                $(selectButton).removeClass("disabled");
+            }
+        }
+    
+}
+
+function disableButton() {
+    if(habilitarRecapchatV3!=1){
+
+        var selectButton = getButton();
+        if (selectButton !== "" && $(selectButton).length) {
+            $(selectButton).attr("disabled", true);
+            $(selectButton).addClass("disabled");
+        }
+    }
+}
+
+var habilitarRecapchatV3 = $("#habilitarRecapchatV3").val();
+var recapchatPublicV3 = $("#recapchatPublicV3").val();
+
+
+// Busca todos los campos de entrada que sean de tipo 'email' y tengan la clase 'form-control'
+$("#formulario input[type='email'].form-control").each(function () {
+
+    // Para cada campo de correo electrónico encontrado, llama a la función 'emailautocomplete' del plugin jQuery 'emailautocomplete'
+    $(this).emailautocomplete({
+        suggClass: "email-suggestion" // Configura la clase CSS que se usará para las sugerencias de autocompletado
+    });
+
+    // Agrega un evento 'keypress' al elemento con la clase 'campoEmail'
+    $('.campoEmail').keypress(function(tecla) {
+
+        // Bloquea el ingreso del caracter 'ñ' al presionarlo (su código de tecla es 241)
+        if(tecla.charCode == 241) {
+            return false;
+        }
+
+        // Bloquea el ingreso del caracter 'Ñ' al presionarlo (su código de tecla es 209)
+        if(tecla.charCode == 209) {
+            return false;
+        }
+
+    });
+});

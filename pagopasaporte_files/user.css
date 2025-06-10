@@ -1,0 +1,235 @@
+
+/* cdiaz*/
+
+
+/*reset basico*/
+* {margin: 0; padding: 0;}
+
+html {
+	/*height: 100%; Image only BG fallback*/
+}
+.modContent .panel {border: none;}
+
+/*estilo formulario*/
+#formulario {    
+	margin: 30px auto;
+	position: relative;
+}
+#formulario legend {display: none; /* TEMPORAL POR VER INNECESARIO - cMartinez*/}
+#formulario fieldset, #form_repro fieldset#paso2  {
+	font-size: 1.125em;
+	border: none;
+	border-radius: 0;
+	padding: 20px;
+        width: 90%;
+        text-align: center;
+	margin: 0 auto; /*Posicionamos todos los fieldset uno encima del otro*/	
+}
+#form_repro fieldset#paso2 { padding: 0; }
+#formulario fieldset .form-group {text-align: left;}
+/*Ocultamos todos menos el primer fieldset*/
+#formulario fieldset:not(:first-of-type) {
+	display: none;
+}
+#formulario label {color: #707070;}
+
+/*inputs*/
+#formulario input,
+#formulario textarea,
+#formulario select {
+	padding: 5px;
+	border: 1px solid #ccc;
+	border-radius: 0px;
+	margin-bottom: 10px;
+	width: 100%;
+	color: #2C3E50;
+	box-sizing: content-box;
+}
+/*buttons*/
+.btn-box {text-align: center;}
+#formulario .action-button {
+	width: 200px;
+	background: #27AE60;
+	font-weight: bold;
+	color: white;
+	border: 0 none;
+	border-radius: 1px;
+	cursor: pointer;
+	padding: 15px;
+	margin: 15px auto;
+	display: inline-block;
+}
+#formulario .action-button:hover, #formulario .action-button:focus {
+	-webkit-box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+	box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+}
+#formulario input#acepto {width: auto; margin-right: 7px; display: inline-block;}
+#formulario label.text-center {display: block;}
+/*headings*/
+.fs-title {
+	text-transform: uppercase;
+	color: #2C3E50;
+	margin-bottom: 10px;
+}
+.fs-subtitle {
+	font-weight: normal;
+	font-size: .875em;
+	color: #666666;
+	margin-bottom: 20px;
+}
+/*progreso*/
+#progreso {
+	text-align: center;
+	/*max-width: 770px;*/
+	margin: 0 auto 30px auto;
+	overflow: hidden; 
+	/*counter-reset: step; CSS contador para numerar los pasos, lo aprendi en http://www.w3schools.com/*/
+	
+}
+
+/*conectores de progreso*/
+#progreso li:after {
+	
+	width: 100%;
+	height: 2px;
+	background: white;
+	position: absolute;
+	left: -50%;
+	top: 9px;	
+}
+
+#progreso li:first-child:after {
+	/*el conector no es necesario antes de que el primer paso*/
+	content: none; 
+}
+
+#progreso li {
+
+	list-style: none;
+	margin: 0 1px 0 0;
+        text-align: center;
+	display: block;
+	width: 32%;
+	height: 50px;
+	font-size: 20px;
+	position: relative;
+	float: left;
+	border: none;
+	border-radius: 0;
+	background: #EBEBEB;
+	color: #707070;
+}
+#progreso li:before {margin-right: 5px;}
+#progreso li:nth-child(1):before {content: "1.";}
+#progreso li:nth-child(2):before {content: "2.";}
+#progreso li:nth-child(3):before {content: "3.";}
+
+.list-group-item.active,
+.list-group-item.active:focus,
+.list-group-item.active:hover,
+#progreso li.active {
+	background-color:#146B8F;
+	color: #FFFFFF;
+}
+
+.active{
+	background-color:#0060a0;
+	color: white;
+}
+.previous{
+	background-color:white;
+	color: black;
+}
+
+.jornada{
+    height: 300px;
+    overflow-y: auto;
+    border-left: 1px solid rgba(0,0,0,.15);
+    margin-bottom: 15px;
+}
+#formulario .form-control-static {
+	text-align: center;
+}
+@media (max-width: 480px) {
+	#progreso li { width: 100%; margin-bottom: 1px;.toolbar-menu-top.nxBlockDynamicLayout1 apla ocklon}
+}
+
+/* CALENDARIO */
+#paso2 label {text-align: left;}
+#paso2 .radio {text-align: left;}
+#datepicker .ui-datepicker table,
+#datepicker .ui-datepicker .ui-datepicker-header {font-size: 1em;}
+#datepicker .hasDatepicker, #datepicker .ui-widget.ui-widget-content {width: 100%}
+
+#datepicker .ui-datepicker-calendar .ui-state-active,
+#datepicker .ui-datepicker-calendar .ui-widget-content .ui-state-active,
+#datepicker .ui-datepicker-calendar .ui-widget-header .ui-state-active {
+	color: #FFFFFF;
+}
+#datepicker .ui-datepicker .ui-datepicker-title {color: #146B8F; font-size: 1.5em;}
+#datepicker .ui-datepicker table thead tr th {
+	background-color: #146B8F;
+	color: #FFFFFF;
+}
+#datepicker .ui-datepicker table tbody tr:nth-child(2n) {
+	background-color: #F6F6F6;
+}
+#datepicker .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+	border: none;
+}
+@media (max-width: 480px) {
+	#datepicker .ui-datepicker .ui-datepicker-title {font-size: 1em;}
+	#formulario fieldset {margin-left: -15px; margin-right: -15px; width: 100%;}
+}
+
+#formulario .radio input {width: inherit;}
+#formulario label.morning, #formulario label.evening,#form_repro label.morning, #form_repro label.evening {
+	color: #FFFFFF;
+	background: url(../../../media/galeria119.png) 45px center no-repeat #898989;
+	background-size: auto 20px;
+	padding: 10px 10px 10px 80px;
+	display: block;
+	text-align: left;
+}
+
+#form_repro .radio input {width: inherit;}
+#form_repro label { 
+	color: #707070;
+	display: block;
+	text-align: center;
+}
+#form_repro .jornada label { text-align: left;}
+
+.text-center{
+	text-align: center;
+	display: block;
+}
+/* app movil */
+body.app-design .panel{
+	background: transparent;
+}
+body.app-design h1,
+body.app-design #progreso{
+	display: none;
+}
+
+.red-msg{
+	color: red;
+	font-size: 20px;
+}
+
+body.app-design .radio > label{
+	margin-left: 30px;
+}
+
+body.app-design .radio > label > input[type=radio] {
+    margin-left: -36px !important;
+}
+
+input.disabled{
+    cursor: not-allowed !important;
+}
+
+#datepicker .ui-datepicker-calendar .ui-state-active, #datepicker .ui-datepicker-calendar .ui-widget-content .ui-state-active, #datepicker .ui-datepicker-calendar .ui-widget-header .ui-state-active {
+    background: #58af62 !important;
+}
